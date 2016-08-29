@@ -117,6 +117,10 @@ function processMessage($message) {
   // process incoming message
   $message_id = $message['message_id'];
   $chat_id = $message['chat']['id'];
+  $user = $message['user']
+  $username = $user['firstname']
+  $userid = $user['id'];
+  
   if (isset($message['text'])) {
     // incoming text message
     $text = $message['text'];
@@ -128,7 +132,11 @@ function processMessage($message) {
         'resize_keyboard' => true)));
     } else if ($text === "Hello" || $text === "Hi") {
       apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'Nice to meet you'));
-    } else if (strpos($text, "/stop") === 0) {
+    } else if ($text === "/group") {
+		apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'Hello, '.$username.', yor id is '.$userid.'.'));
+	}
+	
+	else if (strpos($text, "/stop") === 0) {
       // stop now
     } else {
       apiRequestWebhook("sendMessage", array('chat_id' => $chat_id, "reply_to_message_id" => $message_id, "text" => 'Cool'));
@@ -137,16 +145,6 @@ function processMessage($message) {
     apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'I understand only text messages'));
   }
 }
-
-
-define('WEBHOOK_URL', 'https://mmscedule.herokuapp.com/hellobot.php');
-
-if (php_sapi_name() == 'cli') {
-  // if run from console, set or delete webhook
-  apiRequest('setWebhook', array('url' => isset($argv[1]) && $argv[1] == 'delete' ? '' : WEBHOOK_URL));
-  exit;
-}
-
 
 $content = file_get_contents("php://input");
 $update = json_decode($content, true);
