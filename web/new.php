@@ -1,6 +1,8 @@
 <html>
 <head> fhgdk </head>
 <body>
-vbaekdjgakjdfh;aosd
+<?php
+phpinfo();
+?>
 </body>
 </html>
