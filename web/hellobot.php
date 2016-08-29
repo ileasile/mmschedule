@@ -126,13 +126,24 @@ function processMessage($message) {
     $text = $message['text'];
 
     if (strpos($text, "/start") === 0) {
-      apiRequestJson("sendMessage", array('chat_id' => $chat_id, "text" => 'Hello', 'reply_markup' => array(
-        'keyboard' => array(array('Hello', 'Hi')),
+      apiRequestJson("sendMessage", array('chat_id' => $chat_id, "text" => 'Добрый день! Кто Вы?', 'reply_markup' => array(
+        'keyboard' => array(array('Преподаватель', 'Бакалавр', 'Магистр')),
         'one_time_keyboard' => true,
         'resize_keyboard' => true)));
-    } else if ($text === "Hello" || $text === "Hi") {
-      apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'Nice to meet you'));
-    } else if ($text === "/group") {
+    } 
+	else if ($text === "Преподаватель") {
+		$all_teachers = file_get_contents("teachers.txt");
+		apiRequest("sendMessage", array('chat_id' => $chat_id, 
+			"text" => "Ниже вы видите список преподавателей мехмата. Введите Ваш id:\n".$all_teachers));
+    } 
+	else if ($text === "Бакалавр") {
+		
+	}
+	else if ($text === "Магистр") {
+		
+	}
+	
+	else if ($text === "/me") {
 		apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => ('Hello, '.$username.', yor id is '.$userid.'.')));
 	}
 	
