@@ -117,9 +117,9 @@ function processMessage($message) {
   // process incoming message
   $message_id = $message['message_id'];
   $chat_id = $message['chat']['id'];
-  //$user = $message['user']
-  //$username = $user['first_name']
-  //$userid = $user['id'];
+  $user = $message['from']
+  $username = $user['first_name']
+  $userid = $user['id'];
   
   if (isset($message['text'])) {
     // incoming text message
@@ -132,9 +132,9 @@ function processMessage($message) {
         'resize_keyboard' => true)));
     } else if ($text === "Hello" || $text === "Hi") {
       apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'Nice to meet you'));
-    } //else if ($text === "/group") {
-		//apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => ('Hello, '.$username.', yor id is '.$userid.'.')));
-	//}
+    } else if ($text === "/group") {
+		apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => ('Hello, '.$username.', yor id is '.$userid.'.')));
+	}
 	
 	else if (strpos($text, "/stop") === 0) {
       // stop now
