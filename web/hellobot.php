@@ -127,19 +127,19 @@ function processMessage($message) {
 
     if (strpos($text, "/start") === 0) {
       apiRequestJson("sendMessage", array('chat_id' => $chat_id, "text" => 'Hey, who are you?', 'reply_markup' => array(
-        'keyboard' => array(array('t', 'b', 'm')),
+        'keyboard' => array(array('РџСЂРµРїРѕРґР°РІР°С‚РµР»СЊ', 'Р‘Р°РєР°Р»Р°РІСЂ', 'РњР°РіРёСЃС‚СЂ')),
         'one_time_keyboard' => true,
         'resize_keyboard' => true)));
     } 
-	else if ($text === "Преподаватель") {
+	else if ($text === "РџСЂРµРїРѕРґР°РІР°С‚РµР»СЊ") {
 		$all_teachers = file_get_contents("teachers.txt");
 		apiRequest("sendMessage", array('chat_id' => $chat_id, 
-			"text" => "Ниже вы видите список преподавателей мехмата. Введите Ваш id:\n".$all_teachers));
+			"text" => "РќРёР¶Рµ РІС‹ РІРёРґРёС‚Рµ СЃРїРёСЃРѕРє РїСЂРµРїРѕРґР°РІР°С‚РµР»РµР№ РјРµС…РјР°С‚Р°. Р’РІРµРґРёС‚Рµ Р’Р°С€ id:\n".$all_teachers));
     } 
-	else if ($text === "Бакалавр") {
+	else if ($text === "Р‘Р°РєР°Р»Р°РІСЂ") {
 		
 	}
-	else if ($text === "Магистр") {
+	else if ($text === "РњР°РіРёСЃС‚СЂ") {
 		
 	}
 	
