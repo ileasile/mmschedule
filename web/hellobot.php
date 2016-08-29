@@ -133,7 +133,7 @@ function processMessage($message) {
     } else if ($text === "Hello" || $text === "Hi") {
       apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'Nice to meet you'));
     } else if ($text === "/group") {
-		apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'Hello, '.$username.', yor id is '.$userid.'.'));
+		apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => ('Hello, '.$username.', yor id is '.$userid.'.')));
 	}
 	
 	else if (strpos($text, "/stop") === 0) {
