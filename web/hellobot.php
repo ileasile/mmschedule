@@ -132,7 +132,7 @@ function processMessage($message) {
         'resize_keyboard' => true)));
     } 
 	else if ($text === "Преподаватель") {
-		$all_teachers = file_get_contents("/teachers.txt");
+		$all_teachers = file_get_contents("./teachers.txt");
 		apiRequest("sendMessage", array('chat_id' => $chat_id, 
 			"text" => "Ниже вы видите список преподавателей мехмата. Введите Ваш id:\n".$all_teachers));
     } 
