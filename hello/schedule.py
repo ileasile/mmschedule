@@ -1,2 +1,2 @@
-def hi():
+def hi(request):
 	print('sdgasj')
