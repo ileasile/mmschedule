@@ -3,6 +3,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import config
+import telebot
 
 def sethook(req):
 	bot = telebot.TeleBot(config.token)
