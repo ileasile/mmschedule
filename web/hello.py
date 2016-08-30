@@ -1,1 +1,0 @@
-print(jdh.s)
