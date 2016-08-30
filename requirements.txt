@@ -3,6 +3,4 @@ Django==1.9.2
 gunicorn==19.4.5
 psycopg2==2.6.1
 whitenoise==2.0.6
-requests==2.11.1
-six==1.10.0
 pytelegrambotapi==2.1.6
