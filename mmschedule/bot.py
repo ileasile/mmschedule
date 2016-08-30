@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import config
-import teleport
+import telebot
 
 bot = telebot.TeleBot(config.token)
 
