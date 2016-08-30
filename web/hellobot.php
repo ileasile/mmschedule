@@ -113,6 +113,26 @@ function apiRequestJson($method, $parameters) {
   return exec_curl_request($handle);
 }
 
+function is_command($msg){
+	return strpos($msg, "/") === 0;
+}
+
+function get_command($msg){
+	return explode(" ", substr($msg, 1) );
+}
+
+function get_teachers_dic($contents){
+	$splitted = explode("\n", $contents);
+	$arr = [];
+	
+	foreach($splitted as $i => $val){
+		$s = explode("-", $val);
+		if(count($s) != 2) return false;
+		$arr[trim($s[0])] = trim($s[1]);
+	}
+	return $arr;
+}
+
 function processMessage($message) {
   // process incoming message
   $message_id = $message['message_id'];
@@ -120,21 +140,35 @@ function processMessage($message) {
   $user = $message['from'];
   $username = $user['first_name'];
   $userid = $user['id'];
+  $all_teachers = file_get_contents("./teachers.txt");
   
   if (isset($message['text'])) {
     // incoming text message
     $text = $message['text'];
-
+	
+	if (is_command($text)){
+		$cmd = get_command($text);
+		$cmd_name = $cmd[0];
+		
+		switch($cmd){
+			case "start":
+				apiRequestJson("sendMessage", array('chat_id' => $chat_id, "text" => 'Hey, who are you?', 'reply_markup' => array(
+					'keyboard' => array(array('Преподаватель', 'Бакалавр', 'Магистр')),
+					'one_time_keyboard' => true,
+					'resize_keyboard' => true)));
+				break;
+				
+			case "id":
+				$teachers_dic = get_teachers_dic($all_teachers)[$cmd[1]];
+		}
+	}
     if (strpos($text, "/start") === 0) {
-      apiRequestJson("sendMessage", array('chat_id' => $chat_id, "text" => 'Hey, who are you?', 'reply_markup' => array(
-        'keyboard' => array(array('Преподаватель', 'Бакалавр', 'Магистр')),
-        'one_time_keyboard' => true,
-        'resize_keyboard' => true)));
+      
     } 
 	else if ($text === "Преподаватель") {
-		$all_teachers = file_get_contents("./teachers.txt");
+		
 		apiRequest("sendMessage", array('chat_id' => $chat_id, 
-			"text" => "Ниже вы видите список преподавателей мехмата. Введите Ваш id:\n".$all_teachers));
+			"text" => "Ниже вы видите список преподавателей мехмата.\n".$all_teachers."\nВведите Ваш id в виде /id <id>:"));
     } 
 	else if ($text === "Бакалавр") {
 		
