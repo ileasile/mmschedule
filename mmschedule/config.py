@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 token = '267182954:AAEy1V-7mzwQtbY1czyh8Tx14rlbdHO4lfo'
 
 WEBHOOK_URL = "https://mmscedule.herokuapp.com/mmschedule"
