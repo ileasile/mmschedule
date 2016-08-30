@@ -1,2 +1,2 @@
 def hi():
-	print(sdgasj)
+	print('sdgasj')
