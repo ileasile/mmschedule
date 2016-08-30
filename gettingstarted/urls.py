@@ -4,7 +4,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 import hello.views
-import hello.schedule
+import mmschedule.bot
 
 # Examples:
 # url(r'^$', 'gettingstarted.views.home', name='home'),
@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^$', hello.views.index, name='index'),
     url(r'^db', hello.views.db, name='db'),
     url(r'^admin/', include(admin.site.urls)),
-	url(r'^mmschedule', hello.schedule.hi, name='hi'),
+	url(r'^mmschedule', mmschedule.bot.hi, name='hi'),
+	url(r'^sethook', mmschedule.sethook.sethook, name='sethook'),
 ]
