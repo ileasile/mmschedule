@@ -5,6 +5,7 @@ admin.autodiscover()
 
 import hello.views
 import mmschedule.bot
+import mmschedule.sethook
 
 # Examples:
 # url(r'^$', 'gettingstarted.views.home', name='home'),
