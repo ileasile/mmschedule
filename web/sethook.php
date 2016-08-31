@@ -88,6 +88,6 @@ function apiRequest($method, $parameters) {
   return exec_curl_request($handle);
 }
 
-define('WEBHOOK_URL', 'https://mmscedule.herokuapp.com/hellobot.php');
+define('WEBHOOK_URL', 'https://mmschedule.herokuapp.com/hellobot.php');
 apiRequest('setWebhook', array(''));
 apiRequest('setWebhook', array(WEBHOOK_URL));
