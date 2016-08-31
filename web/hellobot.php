@@ -137,54 +137,18 @@ function processMessage($message) {
   // process incoming message
   $message_id = $message['message_id'];
   $chat_id = $message['chat']['id'];
-  $user = $message['from'];
-  $username = $user['first_name'];
-  $userid = $user['id'];
-  $all_teachers = file_get_contents("./teachers.txt");
-  
-  apiRequest("sendMessage", array('chat_id' => $chat_id, 
-			"text" => "Ниже вы видите список преподавателей мехмата.\n".$all_teachers."\nВведите Ваш id в виде /id <id>:"));
-  
   if (isset($message['text'])) {
     // incoming text message
     $text = $message['text'];
-	
-	if (is_command($text)){
-		$cmd = get_command($text);
-		$cmd_name = $cmd[0];
-		
-		switch($cmd){
-			case "start":
-				apiRequestJson("sendMessage", array('chat_id' => $chat_id, "text" => 'Hey, who are you?', 'reply_markup' => array(
-					'keyboard' => array(array('Преподаватель', 'Бакалавр', 'Магистр')),
-					'one_time_keyboard' => true,
-					'resize_keyboard' => true)));
-				break;
-				
-			case "id":
-				$teachers_dic = get_teachers_dic($all_teachers)[$cmd[1]];
-		}
-	}
+
     if (strpos($text, "/start") === 0) {
-      
-    } 
-	else if ($text === "Преподаватель") {
-		
-		apiRequest("sendMessage", array('chat_id' => $chat_id, 
-			"text" => "Ниже вы видите список преподавателей мехмата.\n".$all_teachers."\nВведите Ваш id в виде /id <id>:"));
-    } 
-	else if ($text === "Бакалавр") {
-		
-	}
-	else if ($text === "Магистр") {
-		
-	}
-	
-	else if ($text === "/me") {
-		apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => ('Hello, '.$username.', yor id is '.$userid.'.')));
-	}
-	
-	else if (strpos($text, "/stop") === 0) {
+      apiRequestJson("sendMessage", array('chat_id' => $chat_id, "text" => 'Hello', 'reply_markup' => array(
+        'keyboard' => array(array('Hello', 'Hi')),
+        'one_time_keyboard' => true,
+        'resize_keyboard' => true)));
+    } else if ($text === "Hello" || $text === "Hi") {
+      apiRequest("sendMessage", array('chat_id' => $chat_id, "text" => 'Nice to meet you'));
+    } else if (strpos($text, "/stop") === 0) {
       // stop now
     } else {
       apiRequestWebhook("sendMessage", array('chat_id' => $chat_id, "reply_to_message_id" => $message_id, "text" => 'Cool'));
