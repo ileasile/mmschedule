@@ -7,8 +7,8 @@ from django.http import HttpResponse
 
 bot = telebot.TeleBot(config.token)
 def process_request(req):
-	if req.META.CONTENT_TYPE == 'application/json':
-		length = int(req.META.CONTENT_LENGTH)
+	if req.META['CONTENT_TYPE'] == 'application/json':
+		length = int(req.META['CONTENT_LENGTH'])
 		json_string = req.read(length).decode("utf-8")
 		update = telebot.types.Update.de_json(json_string)
 		# Эта функция обеспечивает проверку входящего сообщения
