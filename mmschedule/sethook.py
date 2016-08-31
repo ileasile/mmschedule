@@ -8,6 +8,6 @@ import telebot
 def sethook(req):
 	bot = telebot.TeleBot(config.token)
 	bot.remove_webhook()
- # Ставим заново вебхук
-	bot.set_webhook(url=config.WEBHOOK_URL, certificate=open(config.WEBHOOK_SSL_CERT, 'r'))
+ # РЎС‚Р°РІРёРј Р·Р°РЅРѕРІРѕ РІРµР±С…СѓРє
+	bot.set_webhook(url=config.WEBHOOK_URL)
 	return HttpResponse('OK')
