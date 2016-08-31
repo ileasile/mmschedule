@@ -8,11 +8,11 @@ from django.http import HttpResponse
 bot = telebot.TeleBot(config.token)
 def process_request(req):
 	if req.content_type == 'application/json':
-        length = int(req.META.CONTENT_LENGTH)
-        json_string = req.read(length).decode("utf-8")
-        update = telebot.types.Update.de_json(json_string)
-        # Эта функция обеспечивает проверку входящего сообщения
-        bot.process_new_updates([update])
+		length = int(req.META.CONTENT_LENGTH)
+		json_string = req.read(length).decode("utf-8")
+		update = telebot.types.Update.de_json(json_string)
+		# Эта функция обеспечивает проверку входящего сообщения
+		bot.process_new_updates([update])
 		return HttpResponse('')
 	else:
 		return HttpResponse('NOT json: '+req.content_type)
