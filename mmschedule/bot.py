@@ -8,6 +8,7 @@ from django.http import JsonResponse
 
 bot = telebot.TeleBot(config.token)
 def process_request(req):
+	#bot.
 	#return HttpResponse(str(req.META))
 	try:
 		if req.META['CONTENT_TYPE'] == 'application/json':
@@ -26,3 +27,4 @@ def process_request(req):
 def echo_message(message):
 	bot.reply_to(message, message.text)
 	
+bot.polling(none_stop=True)
