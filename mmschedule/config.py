@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 token = '267182954:AAFW6ICuuylyOY4ksQ83gDxmWWW1xlXDo6o'
-WEBHOOK_SSL_CERT = 'pemcer.cer'
+WEBHOOK_SSL_CERT = 'mypem.cer'
 WEBHOOK_URL = "https://mmschedule.herokuapp.com/mmschedule"
 
 WEBHOOK_HOST = 'mmschedule.herokuapp.com/mmschedule'
