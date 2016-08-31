@@ -142,6 +142,9 @@ function processMessage($message) {
   $userid = $user['id'];
   $all_teachers = file_get_contents("./teachers.txt");
   
+  apiRequest("sendMessage", array('chat_id' => $chat_id, 
+			"text" => "Ниже вы видите список преподавателей мехмата.\n".$all_teachers."\nВведите Ваш id в виде /id <id>:"));
+  
   if (isset($message['text'])) {
     // incoming text message
     $text = $message['text'];
