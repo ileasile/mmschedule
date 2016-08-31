@@ -15,6 +15,7 @@ def process_request(req):
 			length = int(req.META['CONTENT_LENGTH'])
 			json_string = req.read(length).decode("utf-8")
 			update = telebot.types.Update.de_json(json_string)
+			print('i\'m here')
 			# Эта функция обеспечивает проверку входящего сообщения
 			bot.process_new_updates([update])
 			return HttpResponse('')
