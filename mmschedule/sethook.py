@@ -9,5 +9,5 @@ def sethook(req):
 	bot = telebot.TeleBot(config.token)
 	bot.remove_webhook()
  # Ставим заново вебхук
-	bot.set_webhook(url=config.WEBHOOK_URL)
+	bot.set_webhook(url=config.WEBHOOK_URL, certificate='pemcer.cer')
 	return HttpResponse('OK')
