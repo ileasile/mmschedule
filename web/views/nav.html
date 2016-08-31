@@ -1,49 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Python Getting Started on Heroku</title>
-  <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-  <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-  <style type="text/css">
-    .jumbotron {
-        background: #532f8c;
-        color: white;
-        padding-bottom: 80px
-    }
-    .jumbotron .btn-primary {
-        background: #845ac7;
-        border-color: #845ac7
-    }
-    .jumbotron .btn-primary:hover {
-        background: #7646c1
-    }
-    .jumbotron p {
-        color: #d9ccee;
-        max-width: 75%;
-        margin: 1em auto 2em
-    }
-    .navbar+.jumbotron {
-        margin-top: -20px
-    }
-    .jumbotron .lang-logo {
-        display: block;
-        background: #b01302;
-        border-radius: 50%;
-        overflow: hidden;
-        width: 100px;
-        height: 100px;
-        margin: auto;
-        border: 2px solid white
-    }
-    .jumbotron .lang-logo img {
-        max-width: 100%
-    }
-
-
-  </style>
-</head>
-<body>
 <nav class="navbar navbar-default navbar-static-top navbar-inverse">
   <div class="container">
     <ul class="nav navbar-nav">
@@ -61,6 +15,7 @@
             <li><a href="https://devcenter.heroku.com/articles/getting-started-with-php">Getting Started with PHP on Heroku</a></li>
             <li><a href="https://devcenter.heroku.com/articles/getting-started-with-python">Getting Started with Python on Heroku</a></li>
             <li><a href="https://devcenter.heroku.com/articles/getting-started-with-java">Getting Started with Java on Heroku</a></li>
+            <li><a href="https://devcenter.heroku.com/articles/getting-started-with-go">Getting Started with Go on Heroku</a></li>
             <li><a href="https://devcenter.heroku.com/articles/getting-started-with-clojure">Getting Started with Clojure on Heroku</a></li>
             <li><a href="https://devcenter.heroku.com/articles/getting-started-with-scala">Getting Started with Scala on Heroku</a></li>
             <li class="divider"></li>
@@ -76,8 +31,3 @@
     </ul>
   </div>
 </nav>
-
-{% block content %}{% endblock %}
-
-</body>
-</html>

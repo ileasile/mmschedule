@@ -1,4 +1,0 @@
-# id | schedule number | course name | teacher id | lower/upper/normal | lecture / practice | cab | groups
-1|2|Компьютерные сети|bukat|l|l|120|3.1 3.2 3.3 3.4
-2|3|Экономика|-|u|l|120|3.1 3.2 3.3 3.4
-3|2|Векторный анализ и теория поля|kurakin|n|l|211|3.1 3.2
