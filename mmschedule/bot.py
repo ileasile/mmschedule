@@ -10,7 +10,7 @@ bot = telebot.TeleBot(config.token)
 def process_request(req):
 	#return HttpResponse(str(req.META))
 	try:
-		if req.req.META['CONTENT_TYPE'] == 'application/json':
+		if req.META['CONTENT_TYPE'] == 'application/json':
 			length = int(req.META['CONTENT_LENGTH'])
 			json_string = req.read(length).decode("utf-8")
 			update = telebot.types.Update.de_json(json_string)
