@@ -15,6 +15,6 @@ urlpatterns = [
     url(r'^$', hello.views.index, name='index'),
     url(r'^db', hello.views.db, name='db'),
     url(r'^admin/', include(admin.site.urls)),
-	url(r'^mmschedule', mmschedule.bot, name='hi'),
+	url(r'^mmschedule', mmschedule.bot.prosess_request, name='hi'),
 	url(r'^sethook', mmschedule.sethook.sethook, name='sethook'),
 ]
