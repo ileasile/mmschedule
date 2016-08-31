@@ -2,6 +2,7 @@
 
 define('BOT_TOKEN', '267182954:AAFW6ICuuylyOY4ksQ83gDxmWWW1xlXDo6o');
 define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/');
+$handle_log = fopen("log.txt","a");
 
 function apiRequestWebhook($method, $parameters) {
   if (!is_string($method)) {
@@ -135,6 +136,7 @@ function get_teachers_dic($contents){
 
 function processMessage($message) {
   // process incoming message
+  fwrite($handle_log,"here\n");
   $message_id = $message['message_id'];
   $chat_id = $message['chat']['id'];
   if (isset($message['text'])) {
@@ -160,6 +162,7 @@ function processMessage($message) {
 
 $content = file_get_contents("php://input");
 $update = json_decode($content, true);
+
 
 if (!$update) {
   // receive wrong update, must not happen
