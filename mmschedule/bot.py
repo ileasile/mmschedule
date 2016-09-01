@@ -86,7 +86,26 @@ def start_react(message):
 		markup.add('Преподаватель', 'Бакалавр', 'Магистр')
 		bot.send_message(chat_id, 'Кто Вы?', reply_markup=markup)
 		save_ext_db_entry(ses_db, usr.id, 'start')
+	except Exception as ex:
+		bot.reply_to(message, str(ex.args)+str(os.listdir(".")))
+
+types_bmt = {'Бакалавр':'b','Магистр':'m','Преподаватель':'t'}
 		
-		#bot.reply_to(message, "\n".join(map(lambda x: x[0], DataBaseDict(config.BOT_TEACHERS_DB).data.values())))
+@bot.message_handler(func = lambda x: x.text == 'Бакалавр' or x.text == 'Магистр' or x.text == 'Преподаватель', content_types=['text'])		
+def bmt_react(msg):
+	usr = message.from_user
+	chat_id = message.chat.id
+	print('Got bak/mag/teach command from ', usr.id, ' - ', usr.first_name)
+	
+	try:
+		if(get_ext_db_entry(ses_db, usr.id) != 'start'):
+			return
+		bmt_type =  types_bmt[msg.text]
+		save_ext_db_entry(ses_db, usr.id, bmt_type)
+		if(bmt_type == 'b' or bmt_type == 'm'):
+			bot.send_message(chat_id, "Из какой Вы группы? (Вводить в формате 'x.x' без кавычек)")
+		else:
+			bot.send_message(chat_id, "Найдите свой id в списке и пришлите его.")
+			bot.send_message(chat_id, "\n".join(map(lambda x: str(x[0])+' : '+str(x[1][0]), DataBaseDict(config.BOT_TEACHERS_DB).data.items().sort(key = lambda r: r[1]))))
 	except Exception as ex:
 		bot.reply_to(message, str(ex.args)+str(os.listdir(".")))
