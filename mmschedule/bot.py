@@ -106,7 +106,9 @@ def bmt_react(msg):
 			bot.send_message(chat_id, "Из какой Вы группы? (Вводить в формате 'x.x' без кавычек)")
 		else:
 			bot.send_message(chat_id, "Найдите свой id в списке и пришлите его.")
-			bot.send_message(chat_id, "\n".join(map(lambda x: str(x[0])+' : '+str(x[1][0]), DataBaseDict(config.BOT_TEACHERS_DB).data.items().sort(key = lambda r: r[1]))))
+			sorted_db = DataBaseDict(config.BOT_TEACHERS_DB).data.items()
+			sorted_db.sort(key = lambda r: r[1])
+			bot.send_message(chat_id, "\n".join(map(lambda x: str(x[0])+' : '+str(x[1][0]), sorted_db)))
 	except Exception as ex:
 		bot.reply_to(msg, str(ex.args)+str(os.listdir(".")))
 
