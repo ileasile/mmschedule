@@ -47,7 +47,10 @@ class DataBaseDict:
                 f.close()
 	
 	
-@bot.message_handler(commands=['start'])
+@bot.message_handler(func = lambda x: return True, commands=['start'])
 def echo_message(message):
 	human_id = message.from_user.id
-	bot.reply_to(message, map(lambda x: x[0], DataBaseDict(BOT_TEACHERS_DB).data.values()))
+	try:
+		bot.reply_to(message, "\n".join(map(lambda x: x[0], DataBaseDict(BOT_TEACHERS_DB).data.values())))
+	except Exception as ex:
+		bot.reply_to(message, str(ex.args))
