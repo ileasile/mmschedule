@@ -46,6 +46,7 @@ class DataBaseDict:
                 f = open(self.filename, 'w')
                 f.write("\n".join(map(lambda row: "|".join(row[0] + row[1]), self.data.items())))
                 f.close()
+		@staticmethod
 		def _reduce_fun(x, y):
 				x.update({y.split("|")[0] : y.split("|")[1:]})
 				return x
