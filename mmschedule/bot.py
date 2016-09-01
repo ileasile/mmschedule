@@ -128,7 +128,7 @@ def all_text_react(msg):
 	
 	try:
 		if(bmt_type == 't'):
-			db = DataBaseDict(config.BOT_TEACHERS_DB)
+			db = DataBaseDict(config.BOT_TEACHERS_DB).data
 			if(db.has_key(msg.text)):
 				save_ext_db_entry(pref_db, usr.id, "t "+msg.text)
 				save_ext_db_entry(ses_db, usr.id, "")
@@ -139,7 +139,7 @@ def all_text_react(msg):
 			if re.match(r"\d\.\d$", msg.text):
 				save_ext_db_entry(pref_db, usr.id, bmt_type+" "+msg.text)
 				save_ext_db_entry(ses_db, usr.id, "")
-				bot.send_message(chat_id, "Отлично! Теперь Вы будете получать расписание для группы " + db[msg.text] + " " + ("(бак)" if bmt_type == 'b' else "(маг)"))
+				bot.send_message(chat_id, "Отлично! Теперь Вы будете получать расписание для группы " + msg.text + " " + ("(бак)" if bmt_type == 'b' else "(маг)"))
 			else:
 				bot.send_message(chat_id, "Неверный формат группы! Попробуйте ещё раз.")			
 	except Exception as ex:
