@@ -47,7 +47,7 @@ class DataBaseDict:
                 f.close()
 	
 	
-@bot.message_handler(func = lambda x: return True, commands=['start'])
+@bot.message_handler(func = lambda x: True, commands=['start'])
 def echo_message(message):
 	human_id = message.from_user.id
 	try:
