@@ -93,8 +93,8 @@ types_bmt = {u'Бакалавр':u'b',u'Магистр':u'm',u'Преподав�
 		
 @bot.message_handler(func = lambda x: x.text == u'Бакалавр' or x.text == u'Магистр' or x.text == u'Преподаватель', content_types=['text'])		
 def bmt_react(msg):
-	usr = message.from_user
-	chat_id = message.chat.id
+	usr = msg.from_user
+	chat_id = msg.chat.id
 	print('Got bak/mag/teach command from ', usr.id, ' - ', usr.first_name)
 	
 	try:
@@ -109,3 +109,9 @@ def bmt_react(msg):
 			bot.send_message(chat_id, "\n".join(map(lambda x: str(x[0])+' : '+str(x[1][0]), DataBaseDict(config.BOT_TEACHERS_DB).data.items().sort(key = lambda r: r[1]))))
 	except Exception as ex:
 		bot.reply_to(message, str(ex.args)+str(os.listdir(".")))
+		
+@bot.message_handler(func = lambda x: True, content_types=['text'])		
+def bmt_react(msg):
+	usr = msg.from_user
+	chat_id = msg.chat.id
+	print('Got text message from ', usr.id, ' - ', usr.first_name, msg.text)
