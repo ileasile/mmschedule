@@ -40,12 +40,15 @@ class DataBaseDict:
         def __init__(self, filename):
                 self.filename = filename
                 f = open(filename, 'r')
-                self.data = reduce(lambda x, y: x.update({y.split("|")[0] : y.split("|")[1:]}), list(f), {})
+                self.data = reduce(DataBaseDict._reduce_fun, list(f), {})
                 f.close()
         def pack(self):
                 f = open(self.filename, 'w')
                 f.write("\n".join(map(lambda row: "|".join(row[0] + row[1]), self.data.items())))
                 f.close()
+		def _reduce_fun(x, y):
+				x.update({y.split("|")[0] : y.split("|")[1:]})
+				return x
 	
 	
 @bot.message_handler(func = lambda x: True, commands=['start'])
