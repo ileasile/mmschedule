@@ -108,10 +108,12 @@ def bmt_react(msg):
 			bot.send_message(chat_id, "Найдите свой id в списке и пришлите его.")
 			bot.send_message(chat_id, "\n".join(map(lambda x: str(x[0])+' : '+str(x[1][0]), DataBaseDict(config.BOT_TEACHERS_DB).data.items().sort(key = lambda r: r[1]))))
 	except Exception as ex:
-		bot.reply_to(message, str(ex.args)+str(os.listdir(".")))
+		bot.reply_to(msg, str(ex.args)+str(os.listdir(".")))
+
+
 		
 @bot.message_handler(func = lambda x: True, content_types=['text'])		
-def bmt_react(msg):
+def all_text_react(msg):
 	usr = msg.from_user
 	chat_id = msg.chat.id
 	print('Got text message from ', usr.id, ' - ', usr.first_name, msg.text)
