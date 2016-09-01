@@ -2,6 +2,7 @@
 
 import config
 import telebot
+import os
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -53,4 +54,4 @@ def echo_message(message):
 	try:
 		bot.reply_to(message, "\n".join(map(lambda x: x[0], DataBaseDict(config.BOT_TEACHERS_DB).data.values())))
 	except Exception as ex:
-		bot.reply_to(message, str(ex.args))
+		bot.reply_to(message, str(ex.args)+str(os.listdir(".")))
