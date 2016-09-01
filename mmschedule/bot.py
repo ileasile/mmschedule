@@ -3,6 +3,7 @@
 import config
 import telebot
 import os
+import re
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -64,6 +65,8 @@ def get_ext_db_entry(db, id):
 			s = f.read()
 			f.close()
 			return s
+		else:
+			return ''
 			
 def save_ext_db_entry(db, id, val):
 		dbpath = db[0]
@@ -102,7 +105,8 @@ def bmt_react(msg):
 			return
 		bmt_type =  types_bmt[msg.text]
 		save_ext_db_entry(ses_db, usr.id, bmt_type)
-		hiding_markup = reply_markup=types.ReplyKeyboardHide(selective=False)
+		hiding_markup = telebot.types.ReplyKeyboardHide(selective=False)
+		
 		if(bmt_type == 'b' or bmt_type == 'm'):
 			bot.send_message(chat_id, "Из какой Вы группы? (Вводить в формате 'x.x' без кавычек)", reply_markup = hiding_markup)
 		else:
@@ -112,8 +116,7 @@ def bmt_react(msg):
 			bot.send_message(chat_id, "\n".join(map(lambda x: str(x[0])+' : '+str(x[1][0]), sorted_db)), reply_markup = hiding_markup)
 	
 	except Exception as ex:
-		bot.reply_to(msg, str(ex.args)+str(os.listdir(".")))
-
+		bot.reply_to(msg, str(ex.args)))
 
 		
 @bot.message_handler(func = lambda x: True, content_types=['text'])		
@@ -121,3 +124,23 @@ def all_text_react(msg):
 	usr = msg.from_user
 	chat_id = msg.chat.id
 	print('Got text message from ', usr.id, ' - ', usr.first_name, msg.text)
+	bmt_type = get_ext_db_entry(ses_db, usr.id)
+	
+	try:
+		if(bmt_type == 't'):
+			db = DataBaseDict(config.BOT_TEACHERS_DB)
+			if(db.has_key(msg.text)):
+				save_ext_db_entry(pref_db, usr.id, "t "+msg.text)
+				save_ext_db_entry(ses_db, usr.id, "")
+				bot.send_message(chat_id, "Отлично! Теперь Вы будете получать расписание для преподавателя "+db[msg.text])
+			else:
+				bot.send_message(chat_id, "Такого id нет в списке... Попробуйте ещё раз.")
+		elif(bmt_type == 'm' or bmt_type == 'b'):
+			if re.match(r"\d\.\d$", msg.text):
+				save_ext_db_entry(pref_db, usr.id, bmt_type+" "+msg.text)
+				save_ext_db_entry(ses_db, usr.id, "")
+				bot.send_message(chat_id, "Отлично! Теперь Вы будете получать расписание для группы " + db[msg.text] + " " + ("(бак)" if bmt_type == 'b' else "(маг)"))
+			else:
+				bot.send_message(chat_id, "Неверный формат группы! Попробуйте ещё раз.")			
+	except Exception as ex:
+		bot.reply_to(msg, str(ex.args)))
