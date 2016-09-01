@@ -83,15 +83,15 @@ def start_react(message):
 	
 	try:
 		markup = telebot.types.ReplyKeyboardMarkup(row_width=1)
-		markup.add('Преподаватель', 'Бакалавр', 'Магистр')
-		bot.send_message(chat_id, 'Кто Вы?', reply_markup=markup)
+		markup.add(u'Преподаватель', u'Бакалавр', u'Магистр')
+		bot.send_message(chat_id, u'Кто Вы?', reply_markup=markup)
 		save_ext_db_entry(ses_db, usr.id, 'start')
 	except Exception as ex:
 		bot.reply_to(message, str(ex.args)+str(os.listdir(".")))
 
-types_bmt = {'Бакалавр':'b','Магистр':'m','Преподаватель':'t'}
+types_bmt = {u'Бакалавр':u'b',u'Магистр':u'm',u'Преподаватель':u't'}
 		
-@bot.message_handler(func = lambda x: x.text == 'Бакалавр' or x.text == 'Магистр' or x.text == 'Преподаватель', content_types=['text'])		
+@bot.message_handler(func = lambda x: x.text == u'Бакалавр' or x.text == u'Магистр' or x.text == u'Преподаватель', content_types=['text'])		
 def bmt_react(msg):
 	usr = message.from_user
 	chat_id = message.chat.id
