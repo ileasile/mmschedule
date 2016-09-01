@@ -40,7 +40,7 @@ class DataBaseDict:
         def __init__(self, filename):
                 self.filename = filename
                 f = open(filename, 'r')
-                self.data = reduce(lambda x, y: x + {y.split("|")[0] : y.split("|")[1:]}, list(f), {})
+                self.data = reduce(lambda x, y: x.update({y.split("|")[0] : y.split("|")[1:]}), list(f), {})
                 f.close()
         def pack(self):
                 f = open(self.filename, 'w')
