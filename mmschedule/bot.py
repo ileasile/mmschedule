@@ -37,7 +37,8 @@ class DataBase:
                 f.close()
 
 def reduce_fun(x, y):
-		x.update({y.split("|")[0] : y.split("|")[1:]})
+		z = map(lambda item: item.strip(), y.split("|"))
+		x.update({z[0] : z[1:]})
 		return x
                 
 class DataBaseDict:
