@@ -10,7 +10,7 @@ WEBHOOK_HOST = 'mmschedule.herokuapp.com/mmschedule'
 #WEBHOOK_URL_BASE = "https://%s:%s" % (WEBHOOK_HOST, WEBHOOK_PORT)
 #WEBHOOK_URL_PATH = "/%s/" % (config.token)
 
-BOT_DB_PATH = './database/'
+BOT_DB_PATH = 'database/'
 BOT_TEACHERS_DB = BOT_DB_PATH+'teachers.txt'
 BOT_LESSONS_DB = BOT_DB_PATH+'lessons.txt'
 BOT_LESSON_TIME_DB = BOT_DB_PATH+'lesson_time.txt'
