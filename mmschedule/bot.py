@@ -8,6 +8,9 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 
 bot = telebot.TeleBot(config.token)
+ses_db = (config.BOT_SESSIONS_DB_PATH, config.BOT_SESSION_FILE_EXT)
+pref_db = (config.BOT_PREF_DB_PATH, config.BOT_PREF_FILE_EXT)
+
 def process_request(req):
 	#bot.
 	#return HttpResponse(str(req.META))
@@ -52,12 +55,38 @@ class DataBaseDict:
                 f.write("\n".join(map(lambda row: "|".join(row[0] + row[1]), self.data.items())))
                 f.close()
 		
-	
+def get_ext_db_entry(db, id):
+		dbpath = db[0]
+		dbext = db[1]
+		file_fullname = dbpath+str(id)+dbext
+		if os.access(file_fullname, os.R_OK):
+			f = open(file_fullname, 'r')
+			s = f.read()
+			f.close()
+			return s
+			
+def save_ext_db_entry(db, id, val):
+		dbpath = db[0]
+		dbext = db[1]
+		val = str(val)
+		file_fullname = dbpath+str(id)+dbext
+		f = open(file_fullname, 'w')
+		f.write(val)
+		f.close
+			
 	
 @bot.message_handler(func = lambda x: True, commands=['start'])
-def echo_message(message):
-	human_id = message.from_user.id
+def start_react(message):
+	usr = message.from_user
+	chat_id = message.chat.id
+	print('Got start command from ', usr.id, ' - ', usr.first_name)
+	
 	try:
-		bot.reply_to(message, "\n".join(map(lambda x: x[0], DataBaseDict(config.BOT_TEACHERS_DB).data.values())))
+		markup = telebot.types.ReplyKeyboardMarkup(row_width=1)
+		markup.add('Преподаватель', 'Бакалавр', 'Магистр')
+		bot.send_message(chat_id, 'Кто Вы?', reply_markup=markup)
+		save_ext_db_entry(ses_db, usr.id, 'start')
+		
+		#bot.reply_to(message, "\n".join(map(lambda x: x[0], DataBaseDict(config.BOT_TEACHERS_DB).data.values())))
 	except Exception as ex:
 		bot.reply_to(message, str(ex.args)+str(os.listdir(".")))
