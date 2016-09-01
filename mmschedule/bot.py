@@ -102,13 +102,15 @@ def bmt_react(msg):
 			return
 		bmt_type =  types_bmt[msg.text]
 		save_ext_db_entry(ses_db, usr.id, bmt_type)
+		hiding_markup = reply_markup=types.ReplyKeyboardHide(selective=False)
 		if(bmt_type == 'b' or bmt_type == 'm'):
-			bot.send_message(chat_id, "Из какой Вы группы? (Вводить в формате 'x.x' без кавычек)")
+			bot.send_message(chat_id, "Из какой Вы группы? (Вводить в формате 'x.x' без кавычек)", reply_markup = hiding_markup)
 		else:
 			bot.send_message(chat_id, "Найдите свой id в списке и пришлите его.")
 			sorted_db = DataBaseDict(config.BOT_TEACHERS_DB).data.items()
 			sorted_db.sort(key = lambda r: r[1])
-			bot.send_message(chat_id, "\n".join(map(lambda x: str(x[0])+' : '+str(x[1][0]), sorted_db)))
+			bot.send_message(chat_id, "\n".join(map(lambda x: str(x[0])+' : '+str(x[1][0]), sorted_db)), reply_markup = hiding_markup)
+	
 	except Exception as ex:
 		bot.reply_to(msg, str(ex.args)+str(os.listdir(".")))
 
