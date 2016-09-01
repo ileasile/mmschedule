@@ -116,7 +116,7 @@ def bmt_react(msg):
 			bot.send_message(chat_id, "\n".join(map(lambda x: str(x[0])+' : '+str(x[1][0]), sorted_db)), reply_markup = hiding_markup)
 	
 	except Exception as ex:
-		bot.reply_to(msg, str(ex.args)))
+		bot.reply_to(msg, str(ex.args))
 
 		
 @bot.message_handler(func = lambda x: True, content_types=['text'])		
@@ -143,4 +143,4 @@ def all_text_react(msg):
 			else:
 				bot.send_message(chat_id, "Неверный формат группы! Попробуйте ещё раз.")			
 	except Exception as ex:
-		bot.reply_to(msg, str(ex.args)))
+		bot.reply_to(msg, str(ex.args))
