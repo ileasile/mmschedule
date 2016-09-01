@@ -25,7 +25,7 @@ def process_request(req):
 		return JsonResponse({'ok':False, 'description': 'Sth gone wrong'})
 
 class DataBase:
-        def DataBase(self, filename):
+        def __init__(self, filename):
                 self.filename = filename
                 f = open(filename, 'r')
                 self.data = map(lambda s: map(lambda x: x.strip(), s.split("|")), list(f))
@@ -36,7 +36,7 @@ class DataBase:
                 f.close()
                 
 class DataBaseDict:
-        def DataBaseDict(self, filename):
+        def __init__(self, filename):
                 self.filename = filename
                 f = open(filename, 'r')
                 self.data = reduce(lambda x, y: x + {y.split("|")[0] : y.split("|")[1,]}, list(f), {})
