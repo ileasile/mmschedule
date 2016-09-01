@@ -132,7 +132,7 @@ def all_text_react(msg):
 			if(db.has_key(msg.text)):
 				save_ext_db_entry(pref_db, usr.id, "t "+msg.text)
 				save_ext_db_entry(ses_db, usr.id, "")
-				bot.send_message(chat_id, "Отлично! Теперь Вы будете получать расписание для преподавателя "+db[msg.text])
+				bot.send_message(chat_id, "Отлично! Теперь Вы будете получать расписание для преподавателя "+db[msg.text][0])
 			else:
 				bot.send_message(chat_id, "Такого id нет в списке... Попробуйте ещё раз.")
 		elif(bmt_type == 'm' or bmt_type == 'b'):
