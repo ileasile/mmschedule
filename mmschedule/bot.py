@@ -136,7 +136,7 @@ def all_text_react(msg):
 			else:
 				bot.send_message(chat_id, "Такого id нет в списке... Попробуйте ещё раз.")
 		elif(bmt_type == 'm' or bmt_type == 'b'):
-			if re.match(ur"\d\.\d$", unicode(msg.text, "utf-8"), flags = re.UNICODE):
+			if re.match(ur"\d\.\d$", msg.text.encode("utf-8"), flags = re.UNICODE):
 				save_ext_db_entry(pref_db, usr.id, bmt_type+" "+msg.text)
 				save_ext_db_entry(ses_db, usr.id, "")
 				bot.send_message(chat_id, "Отлично! Теперь Вы будете получать расписание для группы " + msg.text + " " + ("(бак)" if bmt_type == 'b' else "(маг)"))
