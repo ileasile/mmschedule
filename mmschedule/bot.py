@@ -51,6 +51,6 @@ class DataBaseDict:
 def echo_message(message):
 	human_id = message.from_user.id
 	try:
-		bot.reply_to(message, "\n".join(map(lambda x: x[0], DataBaseDict(BOT_TEACHERS_DB).data.values())))
+		bot.reply_to(message, "\n".join(map(lambda x: x[0], DataBaseDict(config.BOT_TEACHERS_DB).data.values())))
 	except Exception as ex:
 		bot.reply_to(message, str(ex.args))
