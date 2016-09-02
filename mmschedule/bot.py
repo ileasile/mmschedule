@@ -5,6 +5,7 @@ import telebot
 import os
 import re
 import traceback
+import requests
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -83,8 +84,28 @@ def save_ext_db_entry(db, id, val):
 		f = open(file_fullname, 'w')
 		f.write(val)
 		f.close
+
+#ex: req = "grade/list"		
+def schedule_api_req(req):
+	return requests.get("http://users.mmcs.sfedu.ru:3000/"+req).json()
+
+# "1.2", "b"
+def get_group_id(str, type):
+	gradenum = int(str[0])
+	groupnum = int(str[2])
+	gradelist = schedule_api_req("grade/list")
+	filteredgrades = filter(lambda x: x['num'] == gradenum and x['degree'].startswith(type), gradelist)
+	if(len(filteredgrades) != 1) return -1
+	gradeid = int(filteredgrades[0]['id'])
+	grouplist = schedule_api_req("group/list/"+gradeid)
+	filteredgroups = filter(lambda x: x['num'] == groupnum, grouplist)
+	if(len(filteredgroups) != 1) return -1
+	return int(filteredgroups[0]['id'])
+
+# 0 - upper, 1 - lower	
+def get_current_week_type():
+	return schedule_api_req("time/week")['type']
 			
-	
 @bot.message_handler(func = lambda x: True, commands=['start'])
 def start_react(msg):
 	usr = msg.from_user
@@ -128,7 +149,7 @@ def bmt_react(msg):
 
 		
 @bot.message_handler(func = lambda x: not x.text.startswith("/"), content_types=['text'])		
-def all_text_react(msg):
+def all_row_text_react(msg):
 	usr = msg.from_user
 	chat_id = msg.chat.id
 	print('Got text message from ', usr.id, ' - ', usr.first_name, msg.text)
@@ -157,7 +178,7 @@ def all_text_react(msg):
 def whoami_react(msg):
 	usr = msg.from_user
 	chat_id = msg.chat.id
-	print('Got whami command from ', usr.id, ' - ', usr.first_name)
+	print('Got whoami command from ', usr.id, ' - ', usr.first_name)
 	
 	try:
 		tpl = get_ext_db_entry_tuple(pref_db, usr.id)
@@ -180,3 +201,9 @@ def whoami_react(msg):
 	except Exception as ex:
 		print traceback.format_exc()
 		bot.reply_to(msg, str(ex.args))
+		
+@bot.message_handler(func = lambda x: True, commands=['weektype', 'weekupper', 'weeklower', 'wupper', 'wlower'])
+def weektype_react(msg):
+	bot.send_message(msg.chat.id, u'Сейчас '+(u'верхняя' if get_current_week_type()==0 else u'нижняя')+u' неделя.')
+	
+
