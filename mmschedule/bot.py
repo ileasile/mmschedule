@@ -126,7 +126,7 @@ def bmt_react(msg):
 		bot.reply_to(msg, str(ex.args))
 
 		
-@bot.message_handler(func = lambda x: True, content_types=['text'])		
+@bot.message_handler(func = lambda x: not x.text.startswith("/"), content_types=['text'])		
 def all_text_react(msg):
 	usr = msg.from_user
 	chat_id = msg.chat.id
