@@ -70,7 +70,7 @@ def get_ext_db_entry(db, id):
 
 def get_ext_db_entry_tuple(db, id):
 	s = get_ext_db_entry(db, id)
-	if s.len() > 1 and (s[0] == 't' or s[0] == 'm' or s[0] == 'b'):
+	if len(s) > 1 and (s[0] == 't' or s[0] == 'm' or s[0] == 'b'):
 		lst = s.split(" ")
 		return (lst[0], lst[1])
 			
