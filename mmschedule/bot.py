@@ -67,6 +67,12 @@ def get_ext_db_entry(db, id):
 			return s
 		else:
 			return ''
+
+def get_ext_db_entry_tuple(db, id):
+	s = get_ext_db_entry(db, id)
+	if(if s.len() > 1 and (s[0] == 't' or s[0] == 'm' or s[0] == 'b')):
+		lst = s.split(" ")
+		return (lst[0], lst[1])
 			
 def save_ext_db_entry(db, id, val):
 		dbpath = db[0]
@@ -79,9 +85,9 @@ def save_ext_db_entry(db, id, val):
 			
 	
 @bot.message_handler(func = lambda x: True, commands=['start'])
-def start_react(message):
-	usr = message.from_user
-	chat_id = message.chat.id
+def start_react(msg):
+	usr = msg.from_user
+	chat_id = msg.chat.id
 	print('Got start command from ', usr.id, ' - ', usr.first_name)
 	
 	try:
@@ -90,9 +96,10 @@ def start_react(message):
 		bot.send_message(chat_id, u'Кто Вы?', reply_markup=markup)
 		save_ext_db_entry(ses_db, usr.id, 'start')
 	except Exception as ex:
-		bot.reply_to(message, str(ex.args)+str(os.listdir(".")))
+		bot.reply_to(msg, str(ex.args)+str(os.listdir(".")))
 
 types_bmt = {u'Бакалавр':u'b',u'Магистр':u'm',u'Преподаватель':u't'}
+names_bmt = {u'b':u'Бакалавр',u'm':u'Магистр',u't':u'Преподаватель'}
 		
 @bot.message_handler(func = lambda x: x.text == u'Бакалавр' or x.text == u'Магистр' or x.text == u'Преподаватель', content_types=['text'])		
 def bmt_react(msg):
@@ -142,5 +149,31 @@ def all_text_react(msg):
 				bot.send_message(chat_id, u"Отлично! Теперь Вы будете получать расписание для группы " + msg.text.encode("utf-8") + u" " + (u"(бак)" if bmt_type == 'b' else u"(маг)"))
 			else:
 				bot.send_message(chat_id, "Неверный формат группы! Попробуйте ещё раз.")			
+	except Exception as ex:
+		bot.reply_to(msg, str(ex.args))
+		
+@bot.message_handler(func = lambda x: True, commands=['whoami'])
+def whoami_react(msg):
+	usr = msg.from_user
+	chat_id = msg.chat.id
+	print('Got whami command from ', usr.id, ' - ', usr.first_name)
+	
+	try:
+		tpl = get_ext_db_entry(pref_db, usr.id)
+		if(!tpl):
+			bot.send_message(chat_id, 'Мы пока не знаем, кто Вы')
+		else:
+			rep_msg = u'Вы - '
+			if(tpl[0] == 't'):
+				rep_msg += u'преподаватель, '
+				rep_msg += DataBaseDict(config.BOT_TEACHERS_DB).data[tpl[1]]
+			elif(tpl[0] == 'b'):
+				rep_msg += u'бакалавр, группа '
+				rep_msg += tpl[1]
+			elif(tpl[0] == 'm'):
+				rep_msg += u'магистр, группа '
+				rep_msg += tpl[1]
+			bot.send_message(chat_id, rep_msg)
+			
 	except Exception as ex:
 		bot.reply_to(msg, str(ex.args))
