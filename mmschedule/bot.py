@@ -168,7 +168,7 @@ def whoami_react(msg):
 			rep_msg = u'Вы - '
 			if(tpl[0] == 't'):
 				rep_msg += u'преподаватель, '
-				rep_msg += unicode(DataBaseDict(config.BOT_TEACHERS_DB).data[tpl[1]][0])
+				rep_msg += unicode(DataBaseDict(config.BOT_TEACHERS_DB).data[tpl[1]][0], encoding = "utf-8")
 			elif(tpl[0] == 'b'):
 				rep_msg += u'бакалавр, группа '
 				rep_msg += tpl[1]
