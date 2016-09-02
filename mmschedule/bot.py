@@ -177,4 +177,5 @@ def whoami_react(msg):
 			bot.send_message(chat_id, rep_msg)
 			
 	except Exception as ex:
-		bot.reply_to(msg, str(ex.args))
+		pass
+		#bot.reply_to(msg, str(ex.args))
