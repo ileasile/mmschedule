@@ -159,7 +159,8 @@ def whoami_react(msg):
 	print('Got whami command from ', usr.id, ' - ', usr.first_name)
 	
 	try:
-		tpl = get_ext_db_entry(pref_db, usr.id)
+		tpl = get_ext_db_entry_tuple(pref_db, usr.id)
+		print(tpl)
 		if not tpl:
 			bot.send_message(chat_id, 'Мы пока не знаем, кто Вы')
 		else:
