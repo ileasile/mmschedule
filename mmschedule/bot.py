@@ -4,6 +4,7 @@ import config
 import telebot
 import os
 import re
+import traceback
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -158,24 +159,24 @@ def whoami_react(msg):
 	chat_id = msg.chat.id
 	print('Got whami command from ', usr.id, ' - ', usr.first_name)
 	
-	#try:
-	tpl = get_ext_db_entry_tuple(pref_db, usr.id)
-	print(tpl)
-	if not tpl:
-		bot.send_message(chat_id, 'Мы пока не знаем, кто Вы')
-	else:
-		rep_msg = u'Вы - '
-		if(tpl[0] == 't'):
-			rep_msg += u'преподаватель, '
-			rep_msg += unicode(DataBaseDict(config.BOT_TEACHERS_DB).data[tpl[1]][0])
-		elif(tpl[0] == 'b'):
-			rep_msg += u'бакалавр, группа '
-			rep_msg += tpl[1]
-		elif(tpl[0] == 'm'):
-			rep_msg += u'магистр, группа '
-			rep_msg += tpl[1]
-		bot.send_message(chat_id, rep_msg)
+	try:
+		tpl = get_ext_db_entry_tuple(pref_db, usr.id)
+		print(tpl)
+		if not tpl:
+			bot.send_message(chat_id, 'Мы пока не знаем, кто Вы')
+		else:
+			rep_msg = u'Вы - '
+			if(tpl[0] == 't'):
+				rep_msg += u'преподаватель, '
+				rep_msg += unicode(DataBaseDict(config.BOT_TEACHERS_DB).data[tpl[1]][0])
+			elif(tpl[0] == 'b'):
+				rep_msg += u'бакалавр, группа '
+				rep_msg += tpl[1]
+			elif(tpl[0] == 'm'):
+				rep_msg += u'магистр, группа '
+				rep_msg += tpl[1]
+			bot.send_message(chat_id, rep_msg)
 			
-	#except Exception as ex:
-		pass
-		#bot.reply_to(msg, str(ex.args))
+	except Exception as ex:
+		print traceback.format_exc()
+		bot.reply_to(msg, str(ex.args))
