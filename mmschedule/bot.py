@@ -160,7 +160,7 @@ def whoami_react(msg):
 	
 	try:
 		tpl = get_ext_db_entry(pref_db, usr.id)
-		if(!tpl):
+		if not tpl:
 			bot.send_message(chat_id, 'Мы пока не знаем, кто Вы')
 		else:
 			rep_msg = u'Вы - '
