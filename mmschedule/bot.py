@@ -95,11 +95,13 @@ def get_group_id(str, type):
 	groupnum = int(str[2])
 	gradelist = schedule_api_req("grade/list")
 	filteredgrades = filter(lambda x: x['num'] == gradenum and x['degree'].startswith(type), gradelist)
-	if(len(filteredgrades) != 1) return -1
+	if len(filteredgrades) != 1:
+		return -1
 	gradeid = int(filteredgrades[0]['id'])
 	grouplist = schedule_api_req("group/list/"+gradeid)
 	filteredgroups = filter(lambda x: x['num'] == groupnum, grouplist)
-	if(len(filteredgroups) != 1) return -1
+	if len(filteredgroups) != 1:
+		return -1
 	return int(filteredgroups[0]['id'])
 
 # 0 - upper, 1 - lower	
