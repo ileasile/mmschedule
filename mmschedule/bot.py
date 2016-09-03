@@ -136,8 +136,14 @@ def bmt_react(msg):
 	print('Got bak/mag/teach command from ', usr.id, ' - ', usr.first_name)
 	
 	try:
-		if(get_ext_db_entry(ses_db, usr.id) != 'start'):
+		#if(get_ext_db_entry(ses_db, usr.id) != 'start'):
+			#return
+		
+		seslist = dbmodels.Session.objects.filter(id=usr.id)
+		print (seslist)
+		if(len(seslist) != 1 or seslist[0].data != 'start')
 			return
+		
 		bmt_type =  types_bmt[msg.text]
 		#save_ext_db_entry(ses_db, usr.id, bmt_type)
 		sesrec = dbmodels.Session(id=usr.id, data=bmt_type)
