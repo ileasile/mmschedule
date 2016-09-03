@@ -12,5 +12,21 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        
+        migrations.CreateModel(
+            name='Session',
+            fields=[
+                ('id', models.BigIntegerField(primary_key=True, unique=True, verbose_name='ID')),
+                ('data', models.CharField(max_length=50, verbose_name=b'Temp data to store')),
+            ],
+        ),
+		migrations.CreateModel(
+            name='Pref',
+            fields=[
+                ('id', models.BigIntegerField(primary_key=True, unique=True, verbose_name='ID')),
+                ('type', models.CharField(max_length=1, verbose_name=b'BMT type')),
+				('group_as_string', models.CharField(max_length=4, verbose_name=b'Group in format 5.2')),
+				('teacher_as_string', models.CharField(max_length=80, verbose_name=b'Teacher full name')),
+				('gt_id', models.PositiveSmallIntegerField(verbose_name=b'Group/teacher id')),
+            ],
+        ),
     ]
