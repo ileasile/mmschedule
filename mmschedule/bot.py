@@ -194,7 +194,7 @@ def whoami_react(msg):
 			elif(type == 'm'):
 				rep_msg += u'магистр, группа '
 				
-			rep_msg+=unicode(gt_name, encoding="utf-8")
+			rep_msg+=gt_name
 			bot.send_message(chat_id, rep_msg)
 			
 	except Exception as ex:
