@@ -111,7 +111,7 @@ def bmt_react(msg):
 			#sorted_db.sort(key = lambda r: r[1])
 			db = filter(lambda x: unicode(x['name'], encoding="utf-8") != u'', schedule_api_req("teacher/list"))
 			
-			bot.send_message(chat_id, u"\n".join(map(lambda x: unicode(str(x['id']), encoding="utf-8")+u' : '+unicode(x['name'], encoding="utf-8"), db)))
+			bot.send_message(chat_id, u"\n".join(map(lambda x: unicode(str(x['id']), encoding="utf-8")+u' : '+x['name'], db)))
 	
 	except Exception as ex:
 		bot.reply_to(msg, str(ex.args))
