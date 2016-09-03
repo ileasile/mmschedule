@@ -165,10 +165,11 @@ def all_row_text_react(msg):
 				#save_ext_db_entry(pref_db, usr.id, bmt_type+" "+msg.text)
 				#save_ext_db_entry(ses_db, usr.id, "")
 				Session.objects.filter(id=usr.id).delete()
-				bot.send_message(chat_id, u"Отлично! Теперь Вы будете получать расписание для группы " + msg.text.encode("utf-8") + u" " + (u"(бак)" if bmt_type == 'b' else u"(маг)"))
+				bot.send_message(chat_id, u"Отлично! Теперь Вы будете получать расписание для группы " + msg.text + u" " + (u"(бак)" if bmt_type == 'b' else u"(маг)"))
 			else:
 				bot.send_message(chat_id, "Нет такой группы... Подумайте ещё раз.")			
 	except Exception as ex:
+		print traceback.format_exc()
 		bot.reply_to(msg, str(ex.args))
 		
 @bot.message_handler(func = lambda x: True, commands=['whoami'])
