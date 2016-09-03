@@ -57,7 +57,10 @@ def get_teacher_name(id):
 	if(len(tlist) != 1):
 		return ''
 	return tlist[0]['name']
-		
+
+def fullname_to_short(fullname):
+	surname, first_name, second_name = fullname.split(" ")
+	return surname + " " + first_name[0]+". "+second_name[0]+"."
 
 # 0 - upper, 1 - lower	
 def get_current_week_type():
@@ -111,7 +114,7 @@ def bmt_react(msg):
 			#sorted_db.sort(key = lambda r: r[1])
 			db = filter(lambda x: x['name'] != u'', schedule_api_req("teacher/list"))
 			
-			bot.send_message(chat_id, u"\n".join(map(lambda x: unicode(str(x['id']), encoding="utf-8")+u' : '+x['name'], db)))
+			bot.send_message(chat_id, u"\n".join(map(lambda x: unicode(str(x['id']), encoding="utf-8")+u' : '+fullname_to_short(x['name']), db)))
 	
 	except Exception as ex:
 		bot.reply_to(msg, str(ex.args))
