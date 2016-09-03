@@ -168,8 +168,10 @@ def all_row_text_react(msg):
 	chat_id = msg.chat.id
 	print('Got text message from ', usr.id, ' - ', usr.first_name, msg.text)
 	#bmt_type = get_ext_db_entry(ses_db, usr.id)
-	sesrec = dbmodels.Session.objects.filter(id=usr.id)
-	bmt_type = sesrec.data
+	seslist = dbmodels.Session.objects.filter(id=usr.id)
+	if len(seslist) != 1:
+		return
+	bmt_type = seslist[0].data
 	
 	try:
 		if(bmt_type == 't'):
