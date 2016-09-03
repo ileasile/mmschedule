@@ -116,10 +116,14 @@ def bmt_react(msg):
 			#sorted_db = DataBaseDict(config.BOT_TEACHERS_DB).data.items()
 			#sorted_db.sort(key = lambda r: r[1])
 			db = filter(lambda x: x['name'] != u'', schedule_api_req("teacher/list"))
-			resp_mes = u"\n".join(map(lambda x: unicode(str(x['id']), encoding="utf-8")+u' : '+fullname_to_short(x['name']), db))
+			db = map(lambda x: unicode(str(x['id']), encoding="utf-8")+u' : '+fullname_to_short(x['name']), db)
+			lendb = len(db)
+			db1, db2 = db[0:len//2], db[len//2:]
+			resp_mes = [u"\n".join(db1), u"\n".join(db2)]
 			#print(resp_mes)
-			print(len(resp_mes))
-			bot.send_message(chat_id, resp_mes)
+			#print(len(resp_mes))
+			for i in range(2):
+				bot.send_message(chat_id, resp_mes[i])
 	
 	except Exception as ex:
 		bot.reply_to(msg, str(ex.args))
