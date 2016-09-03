@@ -118,7 +118,7 @@ def bmt_react(msg):
 			db = filter(lambda x: x['name'] != u'', schedule_api_req("teacher/list"))
 			db = map(lambda x: unicode(str(x['id']), encoding="utf-8")+u' : '+fullname_to_short(x['name']), db)
 			lendb = len(db)
-			db1, db2 = db[0:len//2], db[len//2:]
+			db1, db2 = db[0:lendb//2], db[lendb//2:]
 			resp_mes = [u"\n".join(db1), u"\n".join(db2)]
 			#print(resp_mes)
 			#print(len(resp_mes))
