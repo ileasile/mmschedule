@@ -150,7 +150,7 @@ def all_row_text_react(msg):
 				#save_ext_db_entry(pref_db, usr.id, "t "+msg.text)
 				#save_ext_db_entry(ses_db, usr.id, "")
 				Session.objects.filter(id=usr.id).delete()
-				bot.send_message(chat_id, "Отлично! Теперь Вы будете получать расписание для преподавателя "+db[msg.text][0])
+				bot.send_message(chat_id, "Отлично! Теперь Вы будете получать расписание для преподавателя "+tname)
 			else:
 				bot.send_message(chat_id, "Такого id нет в списке... Попробуйте ещё раз.")
 		elif(bmt_type == 'm' or bmt_type == 'b'):
