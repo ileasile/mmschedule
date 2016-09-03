@@ -39,8 +39,8 @@ def schedule_api_req(req):
 	return requests.get("http://users.mmcs.sfedu.ru:3000/"+req).json()
 
 # "1.2", "b"
-def get_group_id(str, type):
-	gradenum, groupnum = map(lambda x: int(x), str.split("."))
+def get_group_id(str_g, type):
+	gradenum, groupnum = map(lambda x: int(x), str_g.split("."))
 	gradelist = schedule_api_req("grade/list")
 	filteredgrades = filter(lambda x: x['num'] == gradenum and x['degree'].startswith(type), gradelist)
 	if len(filteredgrades) != 1:
