@@ -13,12 +13,8 @@ from django.http import JsonResponse
 from dbmodels import Session, Pref
 
 bot = telebot.TeleBot(config.token)
-#ses_db = (config.BOT_SESSIONS_DB_PATH, config.BOT_SESSION_FILE_EXT)
-#pref_db = (config.BOT_PREF_DB_PATH, config.BOT_PREF_FILE_EXT)
 
 def process_request(req):
-	#bot.
-	#return HttpResponse(str(req.META))
 	try:
 		if req.META['CONTENT_TYPE'] == 'application/json':
 			length = int(req.META['CONTENT_LENGTH'])
@@ -79,7 +75,6 @@ def start_react(msg):
 		markup = telebot.types.ReplyKeyboardMarkup(row_width=1)
 		markup.add(u'Преподаватель', u'Бакалавр', u'Магистр')
 		bot.send_message(chat_id, u'Кто Вы?', reply_markup=markup)
-		#save_ext_db_entry(ses_db, usr.id, 'start')
 		sesrec = dbmodels.Session(id=usr.id, data='start')
 		sesrec.save()
 	except Exception as ex:
@@ -95,16 +90,12 @@ def bmt_react(msg):
 	print('Got bak/mag/teach command from ', usr.id, ' - ', usr.first_name)
 	
 	try:
-		#if(get_ext_db_entry(ses_db, usr.id) != 'start'):
-			#return
-		
 		seslist = dbmodels.Session.objects.filter(id=usr.id)
 		print (seslist)
 		if len(seslist) != 1 or seslist[0].data != 'start':
 			return
 		
 		bmt_type =  types_bmt[msg.text]
-		#save_ext_db_entry(ses_db, usr.id, bmt_type)
 		sesrec = dbmodels.Session(id=usr.id, data=bmt_type)
 		sesrec.save()
 		hiding_markup = telebot.types.ReplyKeyboardHide(selective=False)
@@ -113,15 +104,11 @@ def bmt_react(msg):
 			bot.send_message(chat_id, "Из какой Вы группы? (Вводить в формате 'x.x' без кавычек)", reply_markup = hiding_markup)
 		else:
 			bot.send_message(chat_id, "Найдите свой id в списке и пришлите его.", reply_markup = hiding_markup)
-			#sorted_db = DataBaseDict(config.BOT_TEACHERS_DB).data.items()
-			#sorted_db.sort(key = lambda r: r[1])
 			db = filter(lambda x: x['name'] != u'', schedule_api_req("teacher/list"))
 			db = map(lambda x: unicode(str(x['id']), encoding="utf-8")+u' : '+fullname_to_short(x['name']), db)
 			lendb = len(db)
 			db1, db2 = db[0:lendb//2], db[lendb//2:]
 			resp_mes = [u"\n".join(db1), u"\n".join(db2)]
-			#print(resp_mes)
-			#print(len(resp_mes))
 			for i in range(2):
 				bot.send_message(chat_id, resp_mes[i])
 	
@@ -134,7 +121,6 @@ def all_row_text_react(msg):
 	usr = msg.from_user
 	chat_id = msg.chat.id
 	print('Got text message from ', usr.id, ' - ', usr.first_name, msg.text)
-	#bmt_type = get_ext_db_entry(ses_db, usr.id)
 	seslist = dbmodels.Session.objects.filter(id=usr.id)
 	if len(seslist) != 1:
 		return
@@ -147,8 +133,6 @@ def all_row_text_react(msg):
 			if(tname != ''):
 				newpref = Pref(id=usr.id, type=bmt_type, gt_as_string=tname, gt_id=tid)
 				newpref.save()
-				#save_ext_db_entry(pref_db, usr.id, "t "+msg.text)
-				#save_ext_db_entry(ses_db, usr.id, "")
 				Session.objects.filter(id=usr.id).delete()
 				bot.send_message(chat_id, u"Отлично! Теперь Вы будете получать расписание для преподавателя "+tname)
 			else:
@@ -162,8 +146,6 @@ def all_row_text_react(msg):
 			if gid != -1 :
 				newpref = Pref(id=usr.id, type=bmt_type, gt_as_string=msg.text, gt_id=gid)
 				newpref.save()
-				#save_ext_db_entry(pref_db, usr.id, bmt_type+" "+msg.text)
-				#save_ext_db_entry(ses_db, usr.id, "")
 				Session.objects.filter(id=usr.id).delete()
 				bot.send_message(chat_id, u"Отлично! Теперь Вы будете получать расписание для группы " + msg.text + u" " + (u"(бак)" if bmt_type == 'b' else u"(маг)"))
 			else:
