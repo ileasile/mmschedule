@@ -141,7 +141,7 @@ def bmt_react(msg):
 		
 		seslist = dbmodels.Session.objects.filter(id=usr.id)
 		print (seslist)
-		if(len(seslist) != 1 or seslist[0].data != 'start')
+		if len(seslist) != 1 or seslist[0].data != 'start':
 			return
 		
 		bmt_type =  types_bmt[msg.text]
