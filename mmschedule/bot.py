@@ -46,7 +46,7 @@ def get_group_id(str, type):
 	if len(filteredgrades) != 1:
 		return -1
 	gradeid = int(filteredgrades[0]['id'])
-	grouplist = schedule_api_req("group/list/"+gradeid)
+	grouplist = schedule_api_req("group/list/"+str(gradeid))
 	filteredgroups = filter(lambda x: x['num'] == groupnum, grouplist)
 	if len(filteredgroups) != 1:
 		return -1
