@@ -59,8 +59,11 @@ def get_teacher_name(id):
 	return tlist[0]['name']
 
 def fullname_to_short(fullname):
-	surname, first_name, second_name = fullname.split(" ")
-	return surname + " " + first_name[0]+". "+second_name[0]+"."
+	try:
+		surname, first_name, second_name = fullname.split(" ")
+		return surname + " " + first_name[0]+". "+second_name[0]+"."
+	except Exception:
+		return fullname
 
 # 0 - upper, 1 - lower	
 def get_current_week_type():
