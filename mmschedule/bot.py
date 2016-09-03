@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import config
+import dbmodels
 import telebot
 import os
 import re
@@ -9,6 +10,7 @@ import requests
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
+from .models import Session, Pref
 
 bot = telebot.TeleBot(config.token)
 ses_db = (config.BOT_SESSIONS_DB_PATH, config.BOT_SESSION_FILE_EXT)
@@ -118,7 +120,9 @@ def start_react(msg):
 		markup = telebot.types.ReplyKeyboardMarkup(row_width=1)
 		markup.add(u'Преподаватель', u'Бакалавр', u'Магистр')
 		bot.send_message(chat_id, u'Кто Вы?', reply_markup=markup)
-		save_ext_db_entry(ses_db, usr.id, 'start')
+		#save_ext_db_entry(ses_db, usr.id, 'start')
+		sesrec = dbmodels.Session(id=usr.id, data='start')
+		sesrec.save()
 	except Exception as ex:
 		bot.reply_to(msg, str(ex.args)+str(os.listdir(".")))
 
@@ -135,7 +139,9 @@ def bmt_react(msg):
 		if(get_ext_db_entry(ses_db, usr.id) != 'start'):
 			return
 		bmt_type =  types_bmt[msg.text]
-		save_ext_db_entry(ses_db, usr.id, bmt_type)
+		#save_ext_db_entry(ses_db, usr.id, bmt_type)
+		sesrec = dbmodels.Session(id=usr.id, data=bmt_type)
+		sesrec.save()
 		hiding_markup = telebot.types.ReplyKeyboardHide(selective=False)
 		
 		if(bmt_type == 'b' or bmt_type == 'm'):
@@ -155,21 +161,25 @@ def all_row_text_react(msg):
 	usr = msg.from_user
 	chat_id = msg.chat.id
 	print('Got text message from ', usr.id, ' - ', usr.first_name, msg.text)
-	bmt_type = get_ext_db_entry(ses_db, usr.id)
+	#bmt_type = get_ext_db_entry(ses_db, usr.id)
+	sesrec = dbmodels.Session.objects.filter(id=usr.id)
+	bmt_type = sesrec.data
 	
 	try:
 		if(bmt_type == 't'):
 			db = DataBaseDict(config.BOT_TEACHERS_DB).data
 			if(db.has_key(msg.text)):
 				save_ext_db_entry(pref_db, usr.id, "t "+msg.text)
-				save_ext_db_entry(ses_db, usr.id, "")
+				#save_ext_db_entry(ses_db, usr.id, "")
+				Session.objects.filter(id=usr.id).delete()
 				bot.send_message(chat_id, "Отлично! Теперь Вы будете получать расписание для преподавателя "+db[msg.text][0])
 			else:
 				bot.send_message(chat_id, "Такого id нет в списке... Попробуйте ещё раз.")
 		elif(bmt_type == 'm' or bmt_type == 'b'):
 			if re.match(ur"\d\.\d$", msg.text, flags = re.UNICODE):
 				save_ext_db_entry(pref_db, usr.id, bmt_type+" "+msg.text)
-				save_ext_db_entry(ses_db, usr.id, "")
+				#save_ext_db_entry(ses_db, usr.id, "")
+				Session.objects.filter(id=usr.id).delete()
 				bot.send_message(chat_id, u"Отлично! Теперь Вы будете получать расписание для группы " + msg.text.encode("utf-8") + u" " + (u"(бак)" if bmt_type == 'b' else u"(маг)"))
 			else:
 				bot.send_message(chat_id, "Неверный формат группы! Попробуйте ещё раз.")			
