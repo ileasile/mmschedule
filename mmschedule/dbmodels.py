@@ -7,6 +7,5 @@ class Session(models.Model):
 class Pref(models.Model):
 	id = models.BigIntegerField(primary_key=True, unique=True)
 	type = models.CharField(max_length=1)
-	group_as_string = models.CharField(max_length=4)
-	teacher_as_string = models.CharField(max_length=80)
+	gt_as_string = models.CharField(max_length=80)
 	gt_id = models.PositiveSmallIntegerField()
