@@ -10,7 +10,7 @@ import requests
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
-from .models import Session, Pref
+from dbmodels import Session, Pref
 
 bot = telebot.TeleBot(config.token)
 ses_db = (config.BOT_SESSIONS_DB_PATH, config.BOT_SESSION_FILE_EXT)
