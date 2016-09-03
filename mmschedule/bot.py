@@ -109,9 +109,9 @@ def bmt_react(msg):
 			bot.send_message(chat_id, "Найдите свой id в списке и пришлите его.", reply_markup = hiding_markup)
 			#sorted_db = DataBaseDict(config.BOT_TEACHERS_DB).data.items()
 			#sorted_db.sort(key = lambda r: r[1])
-			db = filter(lambda x: x['name'] != '', schedule_api_req("teacher/list"))
+			db = filter(lambda x: unicode(x['name'], encoding="utf-8") != u'', schedule_api_req("teacher/list"))
 			
-			bot.send_message(chat_id, u"\n".join(map(lambda x: unicode(str(x['id']), encoding="utf-8")+u' : '+unicode(str(x['name']), encoding="utf-8"), db)))
+			bot.send_message(chat_id, u"\n".join(map(lambda x: unicode(str(x['id']), encoding="utf-8")+u' : '+unicode(x['name'], encoding="utf-8"), db)))
 	
 	except Exception as ex:
 		bot.reply_to(msg, str(ex.args))
