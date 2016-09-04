@@ -359,7 +359,7 @@ def week_schedule_react(msg):
 		reply_text_list=[]
 		for i in range(7):
 			day_sched = get_day_schedule(bmt_type, gt_id, day_num, week_type, make_title=True)
-			if day_sched != u'Пар нет!'	
+			if day_sched != u'Пар нет!':
 				reply_text_list.append(day_sched)
 		
 		#print day_num
