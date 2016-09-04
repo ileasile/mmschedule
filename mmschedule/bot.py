@@ -105,7 +105,7 @@ def format_lesson_t(les_dic):
 	ret += u' - ' + les_dic['curricula']['subjectname']
 	ret += u', группа(ы) ' + u', '.join(map(format_group,les_dic['group']))
 	ret += u', ' + les_dic['curricula']['roomname']
-	return ret
+	return ret+u'\n'
 	
 def get_day_schedule(bmt_type, id, day_num, week_type, make_title = False):
 	if bmt_type==u'm' or bmt_type==u'b':
