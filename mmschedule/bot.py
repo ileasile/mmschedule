@@ -102,7 +102,7 @@ def format_group(gr):
 	
 def format_lesson_t(les_dic):
 	ret = u'<b>' + les_dic['timeslot'].start_time + u'</b>: '
-	ret += u' - ' + les_dic['curricula']['subjectname']
+	ret += les_dic['curricula']['subjectname']
 	ret += u', группа(ы) ' + u', '.join(map(format_group,les_dic['group']))
 	ret += u', ' + les_dic['curricula']['roomname']
 	return ret+u'\n'
@@ -147,7 +147,7 @@ def get_day_schedule(bmt_type, id, day_num, week_type, make_title = False):
 	needed_lessons.sort(key=lambda x: x['timeslot'].start_time)
 	
 	if make_title:
-		title=u'<b>'+daynames_full[day_num]+u'('+weektypes_full[week_type]+u' неделя)</b>\n'
+		title=u'<b>'+daynames_full[day_num]+u' ('+weektypes_full[week_type]+u' неделя)</b>\n'
 	else:
 		title=u''
 	
