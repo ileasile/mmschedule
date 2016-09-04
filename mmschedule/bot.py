@@ -118,8 +118,8 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 		
 		if(len(needed_lessons)==0):
 			return "Пар нет!"
-		
-		return u'\n'.join(map(format_lesson_g, needed_lessons.sort(key=lambda x: x['timeslot'].start_time)))
+		needed_lessons.sort(key=lambda x: x['timeslot'].start_time)
+		return u'\n'.join(map(format_lesson_g, needed_lessons))
 	elif bmt_type==u't':
 		sched = schedule_api_req('schedule/teacher/'+str(id))
 		lessons, curricula, groups = sched['lessons'], sched['curricula'], sched['groups']
@@ -138,8 +138,8 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 		
 		if(len(needed_lessons)==0):
 			return "Пар нет!"
-		
-		return u'\n'.join(map(format_lesson_t, needed_lessons.sort(key=lambda x: x['timeslot'].start_time)))
+		needed_lessons.sort(key=lambda x: x['timeslot'].start_time)
+		return u'\n'.join(map(format_lesson_t, needed_lessons))
 	
 @bot.message_handler(func = lambda x: True, commands=['start'])
 def start_react(msg):
