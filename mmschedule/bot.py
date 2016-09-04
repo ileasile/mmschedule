@@ -7,7 +7,7 @@ import os
 import re
 import traceback
 import requests
-from datetime import date
+from datetime import date, timedelta
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -302,7 +302,8 @@ def day_schedule_react(msg):
 		week_type = get_current_week_type()
 		week_type_auto_calc = True
 		
-		today_day_num = date.today().weekday()
+		delta = timedelta(hours=3)
+		today_day_num = (date.today() + delta).weekday()
 		if msg.text.startswith(u'/today') or msg.text.startswith(u'/day') and len(args) == 0:
 			days_after = 0
 		elif msg.text.startswith(u'/tomorrow'):
