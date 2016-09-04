@@ -190,8 +190,9 @@ def weektype_react(msg):
 	
 @bot.message_handler(func = lambda x: True, commands=['cancel', 'cancel_session'])
 def cancel_react(msg):
+	print("Cancel request")
 	Session.objects.filter(id=msg.from_user.id).delete()
 	hiding_markup = telebot.types.ReplyKeyboardHide(selective=False)
-	bot.send_message(msg.chat.id, u'', reply_markup=hiding_markup)
+	bot.send_message(msg.chat.id, u'Ваша сессия закрыта.', reply_markup=hiding_markup)
 
 	
