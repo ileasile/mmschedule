@@ -239,11 +239,13 @@ def day_schedule_react(msg):
 	
 	usr = msg.from_user
 	preflist = Pref.objects.filter(id=usr.id)
+	print len(preflist)
 	if len(preflist) != 1:
 		bot.send_message(chat_id, u'Для начала зарегистрируйтесь, используя команду /start')
 	else:
 		bmt_type = preflist[0].type
 		gt_id = preflist[0].gt_id
+		print (bmt_type, gt_id)
 		week_type = get_current_week_type()
 		
 		today_day_num = date.today().weekday()
@@ -251,4 +253,5 @@ def day_schedule_react(msg):
 			day_num = today_day_num
 		elif msg.text.startswith(u'/tomorrow'):
 			day_num = (today_day_num + 1) % 7
+		print day_num
 		bot.send_message(msg.chat.id, get_day_schedule(bmt_type, gt_id, day_num, week_type))
