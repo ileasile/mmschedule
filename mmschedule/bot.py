@@ -80,7 +80,7 @@ def get_current_week_type():
 	return schedule_api_req("time/week")['type']
 
 def format_lesson_g(les_dic):	
-	ret = les_dic['timeslot'].start_time +u': '
+	ret = u'<b>'+les_dic['timeslot'].start_time +u'</b>: '
 	for elem in les_dic['curricula']:
 		ret += elem['subjectname']
 		ret += u', ' + elem['teachername']
@@ -93,7 +93,7 @@ def format_group(gr):
 	return unicode(str(gr['gradenum']) + '.' + str(gr['groupnum']), encoding="utf-8")
 	
 def format_lesson_t(les_dic):
-	ret = les_dic['timeslot'].start_time
+	ret = u'<b>' + les_dic['timeslot'].start_time + u'</b>: '
 	ret += u' - ' + les_dic['curricula']['subjectname']
 	ret += u', группа(ы) ' + u', '.join(map(format_group,les_dic['group']))
 	ret += u', ' + les_dic['curricula']['roomname']
@@ -310,4 +310,4 @@ def day_schedule_react(msg):
 		week_type = int(bool(week_type) !=  bool(((today_day_num + days_after)//7)%2))
 		
 		#print day_num
-		bot.send_message(msg.chat.id, get_day_schedule(bmt_type, gt_id, day_num, week_type))
+		bot.send_message(msg.chat.id, get_day_schedule(bmt_type, gt_id, day_num, week_type), parse_mode='HTML')
