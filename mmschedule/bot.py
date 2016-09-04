@@ -331,3 +331,36 @@ def day_schedule_react(msg):
 		
 		#print day_num
 		bot.send_message(msg.chat.id, get_day_schedule(bmt_type, gt_id, day_num, week_type, make_title=True), parse_mode='HTML')
+
+@bot.message_handler(func = lambda x: True, commands=['week'])
+def week_schedule_react(msg):
+	print("Week schedule request")
+	
+	args = msg.text.split(" ")[1:]
+	usr = msg.from_user
+	preflist = Pref.objects.filter(id=usr.id)
+	
+	print len(preflist)
+	if len(preflist) != 1:
+		bot.send_message(chat_id, u'Для начала зарегистрируйтесь, используя команду /start')
+	else:
+		bmt_type = preflist[0].type
+		gt_id = preflist[0].gt_id
+		#print (bmt_type, gt_id)
+		if len(args) == 0:
+			week_type = get_current_week_type()
+		else:
+			week_key = args[1]
+			if not typeweek_names.has_key(week_key):
+				bot.send_message(msg.chat.id, u'Неправильный формат типа недели')
+				return
+			week_type = typeweek_names[week_key]
+		
+		reply_text_list=[]
+		for i in range(7):
+			day_sched = get_day_schedule(bmt_type, gt_id, day_num, week_type, make_title=True)
+			if day_sched != u'Пар нет!'	
+				reply_text_list.append(day_sched)
+		
+		#print day_num
+		bot.send_message(msg.chat.id, "\n".join(reply_text_list), parse_mode='HTML')		
