@@ -7,12 +7,26 @@ import os
 import re
 import traceback
 import requests
+from datetime import date
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 from dbmodels import Session, Pref
 
 bot = telebot.TeleBot(config.token)
+
+class Timeslot:
+	__init__ (self, string):
+		lst = string[1:-1].split(",")
+		self.day_num = int(lst[0])
+		self.start_time = lst[1][0:5]
+		self.end_time = lst[2][0:5]
+		if(lst[3] == u'full'):
+			self.wtype = 2
+		elif(lst[3] == u'upper'):
+			self.wtype = 0
+		elif(lst[3] == u'lower'):
+			self.wtype = 1
 
 def process_request(req):
 	try:
@@ -61,10 +75,34 @@ def fullname_to_short(fullname):
 	except Exception:
 		return fullname
 
-# 0 - upper, 1 - lower	
+# 0 - upper, 1 - lower, 2 - full
 def get_current_week_type():
 	return schedule_api_req("time/week")['type']
-			
+
+def format_lesson_g(les_dic):	
+	ret = les_dic['timeslot'].start_time
+	ret += u' - ' + les_dic['curricula']['subjectname']
+	ret += u', ' + les_dic['curricula']['teachername']
+	ret += u', ' + les_dic['curricula']['roomname']
+	return ret
+	
+def get_day_schedule(bmt_type, id, day_num, week_type):
+	if bmt_type==u'm' or bmt_type==u'b':
+		sched = schedule_api_req('schedule/group/'+str(id))
+		lessons, curricula = sched['lessons'], sched['curricula']
+		timeslots = map(lambda x: Timeslot(x['timeslot']), lessons)
+		needed_lessons = []
+		for i in range(0, len(lessons)):
+			if(timeslots[i].day_num == day_num and (timeslots[i].wtype == week_type or timeslots[i].wtype == 2)):
+				needed_lessons.add({
+					'lesson':lessons[i], 
+					'timeslot':timeslots[i], 
+					'curricula':filter(lambda x: x['lessonid'] == lessons[i]['id'], curricula)[0]
+				})
+		return u'\n'.join(map(format_lesson_g, needed_lessons))
+	elif bmt_type==u't':
+		return
+	
 @bot.message_handler(func = lambda x: True, commands=['start'])
 def start_react(msg):
 	usr = msg.from_user
@@ -195,4 +233,22 @@ def cancel_react(msg):
 	hiding_markup = telebot.types.ReplyKeyboardHide(selective=False)
 	bot.send_message(msg.chat.id, u'Ваша сессия закрыта.', reply_markup=hiding_markup)
 
+@bot.message_handler(func = lambda x: True, commands=['today', 'tomorrow'])
+def day_schedule_react(msg):
+	print("Today schedule request")
 	
+	usr = msg.from_user
+	preflist = Pref.objects.filter(id=usr.id)
+	if len(preflist) != 1:
+		bot.send_message(chat_id, u'Для начала зарегистрируйтесь, используя команду /start')
+	else:
+		bmt_type = preflist[0].type
+		gt_id = preflist[0].gt_id
+		week_type = get_current_week_type()
+		
+		today_day_num = date.today().weekday()
+		if msg.text.startswith(u'/today'):
+			day_num = today_day_num
+		elif msg.text.startswith(u'/tomorrow'):
+			day_num = (today_day_num + 1) % 7
+		bot.send_message(msg.chat.id, get_day_schedule(bmt_type, gt_id, day_num, week_type))
