@@ -143,7 +143,7 @@ def get_day_schedule(bmt_type, id, day_num, week_type, make_title = False):
 		format_lesson_fun = format_lesson_t
 
 	if(len(needed_lessons)==0):
-		return "Пар нет!"
+		return u"Пар нет!"
 	needed_lessons.sort(key=lambda x: x['timeslot'].start_time)
 	
 	if make_title:
