@@ -130,7 +130,7 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 				needed_lessons.append({
 					'lesson':lessons[i], 
 					'timeslot':timeslots[i], 
-					'curricula':filter(lambda x: x[u'lessonid'] == lessons[i][u'id'], curricula)[0]
+					'curricula':filter(lambda x: x[u'lessonid'] == lessons[i][u'id'], curricula)[0],
 					'group':filter(lambda x: x[u'uberid'] == lessons[i][u'uberid'], groups)
 				})
 		
