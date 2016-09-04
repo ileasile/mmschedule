@@ -85,6 +85,17 @@ def format_lesson_g(les_dic):
 	ret += u', ' + les_dic['curricula']['teachername']
 	ret += u', ' + les_dic['curricula']['roomname']
 	return ret
+
+def format_group(gr):
+	type = u'(бак)' if gr['degree'].startswith(u'b') else u'(маг)'
+	return unicode(str(gr['gradenum']) + '.' + str(gr['groupnum']), encoding="utf-8")
+	
+def format_lesson_t(les_dic):
+	ret = les_dic['timeslot'].start_time
+	ret += u' - ' + les_dic['curricula']['subjectname']
+	ret += u', группа(ы) ' + u', '.join(map(format_group,les_dic['group']))
+	ret += u', ' + les_dic['curricula']['roomname']
+	return ret
 	
 def get_day_schedule(bmt_type, id, day_num, week_type):
 	if bmt_type==u'm' or bmt_type==u'b':
@@ -108,7 +119,25 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 		
 		return u'\n'.join(map(format_lesson_g, needed_lessons))
 	elif bmt_type==u't':
-		return
+		sched = schedule_api_req('schedule/teacher/'+str(id))
+		lessons, curricula, groups = sched['lessons'], sched['curricula'], sched['groups']
+		timeslots = map(lambda x: Timeslot(x[u'timeslot']), lessons)
+		
+		needed_lessons = []
+		for i in range(0, len(lessons)):
+			#print (timeslots[i].day_num, timeslots[i].wtype)
+			if(timeslots[i].day_num == day_num and (timeslots[i].wtype == week_type or timeslots[i].wtype == 2)):
+				needed_lessons.append({
+					'lesson':lessons[i], 
+					'timeslot':timeslots[i], 
+					'curricula':filter(lambda x: x[u'lessonid'] == lessons[i][u'id'], curricula)[0]
+					'group':filter(lambda x: x[u'uberid'] == lessons[i][u'uberid'], groups)
+				})
+		
+		if(len(needed_lessons)==0):
+			return "Пар нет!"
+		
+		return u'\n'.join(map(format_lesson_t, needed_lessons))
 	
 @bot.message_handler(func = lambda x: True, commands=['start'])
 def start_react(msg):
@@ -257,7 +286,7 @@ def day_schedule_react(msg):
 		
 		today_day_num = date.today().weekday()
 		if msg.text.startswith(u'/today'):
-			days_after = 1
+			days_after = 0
 		elif msg.text.startswith(u'/tomorrow'):
 			days_after = 1
 		day_num = (today_day_num + days_after) % 7
