@@ -95,14 +95,17 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 		
 		needed_lessons = []
 		for i in range(0, len(lessons)):
-			print (timeslots[i].day_num, timeslots[i].wtype)
+			#print (timeslots[i].day_num, timeslots[i].wtype)
 			if(timeslots[i].day_num == day_num and (timeslots[i].wtype == week_type or timeslots[i].wtype == 2)):
 				needed_lessons.append({
 					'lesson':lessons[i], 
 					'timeslot':timeslots[i], 
 					'curricula':filter(lambda x: x[u'lessonid'] == lessons[i][u'id'], curricula)[0]
 				})
-				
+		
+		if(len(needed_lessons)==0):
+			return "Пар нет!"
+		
 		return u'\n'.join(map(format_lesson_g, needed_lessons))
 	elif bmt_type==u't':
 		return
@@ -239,7 +242,7 @@ def cancel_react(msg):
 
 @bot.message_handler(func = lambda x: True, commands=['today', 'tomorrow'])
 def day_schedule_react(msg):
-	print("Today schedule request")
+	print("Day schedule request")
 	
 	usr = msg.from_user
 	preflist = Pref.objects.filter(id=usr.id)
@@ -249,13 +252,16 @@ def day_schedule_react(msg):
 	else:
 		bmt_type = preflist[0].type
 		gt_id = preflist[0].gt_id
-		print (bmt_type, gt_id)
+		#print (bmt_type, gt_id)
 		week_type = get_current_week_type()
 		
 		today_day_num = date.today().weekday()
 		if msg.text.startswith(u'/today'):
-			day_num = today_day_num
+			days_after = 1
 		elif msg.text.startswith(u'/tomorrow'):
-			day_num = (today_day_num + 1) % 7
-		print day_num
+			days_after = 1
+		day_num = (today_day_num + days_after) % 7
+		week_type = int(bool(week_type) !=  bool(((today_day_num + days_after)//7)%2))
+		
+		#print day_num
 		bot.send_message(msg.chat.id, get_day_schedule(bmt_type, gt_id, day_num, week_type))
