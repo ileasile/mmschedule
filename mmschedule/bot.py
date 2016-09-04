@@ -151,7 +151,7 @@ def get_day_schedule(bmt_type, id, day_num, week_type, make_title = False):
 	else:
 		title=u''
 	
-	return title + u'\n'.join(map(format_lesson_fun, needed_lessons))
+	return title + u''.join(map(format_lesson_fun, needed_lessons))
 	
 @bot.message_handler(func = lambda x: True, commands=['start'])
 def start_react(msg):
