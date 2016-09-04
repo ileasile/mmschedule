@@ -269,12 +269,17 @@ def cancel_react(msg):
 	hiding_markup = telebot.types.ReplyKeyboardHide(selective=False)
 	bot.send_message(msg.chat.id, u'Ваша сессия закрыта.', reply_markup=hiding_markup)
 
-@bot.message_handler(func = lambda x: True, commands=['today', 'tomorrow'])
+days_names={u'mon':0, u'tue':1, u'wed':2, u'thu':3, u'fri':4, u'sat':5, u'sun':6, 
+			u'пн':0, u'вт':1, u'ср':2, u'чт':3, u'пт':4, u'сб':5, u'вс':6,}
+
+@bot.message_handler(func = lambda x: True, commands=['today', 'tomorrow', 'day'])
 def day_schedule_react(msg):
 	print("Day schedule request")
 	
+	args = msg.text.split(" ")[1:]
 	usr = msg.from_user
 	preflist = Pref.objects.filter(id=usr.id)
+	
 	print len(preflist)
 	if len(preflist) != 1:
 		bot.send_message(chat_id, u'Для начала зарегистрируйтесь, используя команду /start')
@@ -285,10 +290,20 @@ def day_schedule_react(msg):
 		week_type = get_current_week_type()
 		
 		today_day_num = date.today().weekday()
-		if msg.text.startswith(u'/today'):
+		if msg.text.startswith(u'/today') or len(args) == 0:
 			days_after = 0
 		elif msg.text.startswith(u'/tomorrow'):
 			days_after = 1
+		elif msg.text.startswith(u'/day'):
+			day_key = args[0].lower()
+			if not days_names.has_key(day_key):
+				bot.send_message(msg.chat.id, u'Неправильный формат дня недели')
+				return
+			wanted_day = days_names[day_key]
+			days_after = wanted_day - today_day_num
+			if days_after < 0:
+				days_after += 7
+			
 		day_num = (today_day_num + days_after) % 7
 		week_type = int(bool(week_type) !=  bool(((today_day_num + days_after)//7)%2))
 		
