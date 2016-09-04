@@ -148,7 +148,7 @@ def get_day_schedule(bmt_type, id, day_num, week_type, make_title = False):
 	
 	if make_title:
 		title=u'<b>'+daynames_full[day_num]+u'('+weektypes_full[week_type]+u' неделя)</b>\n'
-	else
+	else:
 		title=u''
 	
 	return u'\n'.join(map(format_lesson_fun, needed_lessons))
