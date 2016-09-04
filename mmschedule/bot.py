@@ -82,9 +82,9 @@ def get_current_week_type():
 def format_lesson_g(les_dic):	
 	ret = les_dic['timeslot'].start_time +u': '
 	for elem in les_dic['curricula']:
-		ret += u' - ' + elem['subjectname']
+		ret += elem['subjectname']
 		ret += u', ' + elem['teachername']
-		ret += u', ' + elem['roomname']
+		ret += u'; ' + elem['roomname']
 		ret += u'\n'
 	return ret
 
@@ -119,7 +119,7 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 		if(len(needed_lessons)==0):
 			return "Пар нет!"
 		
-		return u'\n'.join(map(format_lesson_g, needed_lessons))
+		return u'\n'.join(map(format_lesson_g, needed_lessons.sort(key=lambda x: x['timeslot'].start_time)))
 	elif bmt_type==u't':
 		sched = schedule_api_req('schedule/teacher/'+str(id))
 		lessons, curricula, groups = sched['lessons'], sched['curricula'], sched['groups']
@@ -139,7 +139,7 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 		if(len(needed_lessons)==0):
 			return "Пар нет!"
 		
-		return u'\n'.join(map(format_lesson_t, needed_lessons))
+		return u'\n'.join(map(format_lesson_t, needed_lessons.sort(key=lambda x: x['timeslot'].start_time)))
 	
 @bot.message_handler(func = lambda x: True, commands=['start'])
 def start_react(msg):
