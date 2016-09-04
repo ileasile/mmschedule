@@ -16,8 +16,8 @@ from dbmodels import Session, Pref
 bot = telebot.TeleBot(config.token)
 
 class Timeslot:
-	__init__ (self, string):
-		lst = string[1:-1].split(",")
+	def __init__ (self, s):
+		lst = s[1:-1].split(",")
 		self.day_num = int(lst[0])
 		self.start_time = lst[1][0:5]
 		self.end_time = lst[2][0:5]
