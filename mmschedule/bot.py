@@ -93,12 +93,14 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 		timeslots = map(lambda x: Timeslot(x['timeslot']), lessons)
 		needed_lessons = []
 		for i in range(0, len(lessons)):
+			print (timeslots[i].day_num, timeslots[i].wtype)
 			if(timeslots[i].day_num == day_num and (timeslots[i].wtype == week_type or timeslots[i].wtype == 2)):
 				needed_lessons.add({
 					'lesson':lessons[i], 
 					'timeslot':timeslots[i], 
 					'curricula':filter(lambda x: x['lessonid'] == lessons[i]['id'], curricula)[0]
 				})
+				
 		return u'\n'.join(map(format_lesson_g, needed_lessons))
 	elif bmt_type==u't':
 		return
