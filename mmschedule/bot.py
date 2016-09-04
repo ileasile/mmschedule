@@ -188,4 +188,10 @@ def whoami_react(msg):
 def weektype_react(msg):
 	bot.send_message(msg.chat.id, u'Сейчас '+(u'верхняя' if get_current_week_type()==0 else u'нижняя')+u' неделя.')
 	
+@bot.message_handler(func = lambda x: True, commands=['cancel', 'cancel_session'])
+def cancel_react(msg):
+	Session.objects.filter(id=msg.from_user.id).delete()
+	hiding_markup = telebot.types.ReplyKeyboardHide(selective=False)
+	bot.send_message(msg.chat.id, u'', reply_markup=hiding_markup)
 
+	
