@@ -350,7 +350,7 @@ def week_schedule_react(msg):
 		if len(args) == 0:
 			week_type = get_current_week_type()
 		else:
-			week_key = args[1]
+			week_key = args[0]
 			if not typeweek_names.has_key(week_key):
 				bot.send_message(msg.chat.id, u'Неправильный формат типа недели')
 				return
