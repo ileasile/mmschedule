@@ -90,8 +90,8 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 	if bmt_type==u'm' or bmt_type==u'b':
 		sched = schedule_api_req('schedule/group/'+str(id))
 		lessons, curricula = sched['lessons'], sched['curricula']
-		timeslots = map(lambda x: Timeslot(x['timeslot']), lessons)
-		print (lessons, curricula)
+		timeslots = map(lambda x: Timeslot(x[u'timeslot']), lessons)
+		print (lessons, curricula, timeslots)
 		
 		needed_lessons = []
 		for i in range(0, len(lessons)):
