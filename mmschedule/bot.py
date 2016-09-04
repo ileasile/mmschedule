@@ -80,10 +80,12 @@ def get_current_week_type():
 	return schedule_api_req("time/week")['type']
 
 def format_lesson_g(les_dic):	
-	ret = les_dic['timeslot'].start_time
-	ret += u' - ' + les_dic['curricula']['subjectname']
-	ret += u', ' + les_dic['curricula']['teachername']
-	ret += u', ' + les_dic['curricula']['roomname']
+	ret = les_dic['timeslot'].start_time +u': '
+	for elem in les_dic['curricula']:
+		ret += u' - ' + elem['subjectname']
+		ret += u', ' + elem['teachername']
+		ret += u', ' + elem['roomname']
+		ret += u'\n'
 	return ret
 
 def format_group(gr):
@@ -111,7 +113,7 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 				needed_lessons.append({
 					'lesson':lessons[i], 
 					'timeslot':timeslots[i], 
-					'curricula':filter(lambda x: x[u'lessonid'] == lessons[i][u'id'], curricula)[0]
+					'curricula':filter(lambda x: x[u'lessonid'] == lessons[i][u'id'], curricula)
 				})
 		
 		if(len(needed_lessons)==0):
