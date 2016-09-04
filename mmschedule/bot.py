@@ -15,6 +15,14 @@ from dbmodels import Session, Pref
 
 bot = telebot.TeleBot(config.token)
 
+days_names={u'mon':0, u'tue':1, u'wed':2, u'thu':3, u'fri':4, u'sat':5, u'sun':6, 
+			u'пн':0, u'вт':1, u'ср':2, u'чт':3, u'пт':4, u'сб':5, u'вс':6,}
+typeweek_names={u'l':1, u'u':0, u'в':0, u'н':1}
+types_bmt = {u'Бакалавр':u'b',u'Магистр':u'm',u'Преподаватель':u't'}
+names_bmt = {u'b':u'Бакалавр',u'm':u'Магистр',u't':u'Преподаватель'}
+weektypes_full = [u'верхняя', u'нижняя']
+daynames_full = [u'Понедельник',u'Вторник',u'Среда',u'Четверг',u'Пятница',u'Суббота',u'Воскресенье']
+
 class Timeslot:
 	def __init__ (self, s):
 		lst = s[1:-1].split(",")
@@ -99,7 +107,7 @@ def format_lesson_t(les_dic):
 	ret += u', ' + les_dic['curricula']['roomname']
 	return ret
 	
-def get_day_schedule(bmt_type, id, day_num, week_type):
+def get_day_schedule(bmt_type, id, day_num, week_type, make_title = False):
 	if bmt_type==u'm' or bmt_type==u'b':
 		sched = schedule_api_req('schedule/group/'+str(id))
 		lessons, curricula = sched['lessons'], sched['curricula']
@@ -115,11 +123,8 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 					'timeslot':timeslots[i], 
 					'curricula':filter(lambda x: x[u'lessonid'] == lessons[i][u'id'], curricula)
 				})
-		
-		if(len(needed_lessons)==0):
-			return "Пар нет!"
-		needed_lessons.sort(key=lambda x: x['timeslot'].start_time)
-		return u'\n'.join(map(format_lesson_g, needed_lessons))
+		format_lesson_fun = format_lesson_g
+	
 	elif bmt_type==u't':
 		sched = schedule_api_req('schedule/teacher/'+str(id))
 		lessons, curricula, groups = sched['lessons'], sched['curricula'], sched['groups']
@@ -135,11 +140,18 @@ def get_day_schedule(bmt_type, id, day_num, week_type):
 					'curricula':filter(lambda x: x[u'lessonid'] == lessons[i][u'id'], curricula)[0],
 					'group':filter(lambda x: x[u'uberid'] == lessons[i][u'uberid'], groups)
 				})
-		
-		if(len(needed_lessons)==0):
-			return "Пар нет!"
-		needed_lessons.sort(key=lambda x: x['timeslot'].start_time)
-		return u'\n'.join(map(format_lesson_t, needed_lessons))
+		format_lesson_fun = format_lesson_t
+
+	if(len(needed_lessons)==0):
+		return "Пар нет!"
+	needed_lessons.sort(key=lambda x: x['timeslot'].start_time)
+	
+	if make_title:
+		title=u'<b>'+daynames_full[day_num]+u'('+weektypes_full[week_type]+u' неделя)</b>\n'
+	else
+		title=u''
+	
+	return u'\n'.join(map(format_lesson_fun, needed_lessons))
 	
 @bot.message_handler(func = lambda x: True, commands=['start'])
 def start_react(msg):
@@ -156,8 +168,7 @@ def start_react(msg):
 	except Exception as ex:
 		bot.reply_to(msg, str(ex.args)+str(os.listdir(".")))
 
-types_bmt = {u'Бакалавр':u'b',u'Магистр':u'm',u'Преподаватель':u't'}
-names_bmt = {u'b':u'Бакалавр',u'm':u'Магистр',u't':u'Преподаватель'}
+
 		
 @bot.message_handler(func = lambda x: x.text == u'Бакалавр' or x.text == u'Магистр' or x.text == u'Преподаватель', content_types=['text'])		
 def bmt_react(msg):
@@ -271,9 +282,8 @@ def cancel_react(msg):
 	hiding_markup = telebot.types.ReplyKeyboardHide(selective=False)
 	bot.send_message(msg.chat.id, u'Ваша сессия закрыта.', reply_markup=hiding_markup)
 
-days_names={u'mon':0, u'tue':1, u'wed':2, u'thu':3, u'fri':4, u'sat':5, u'sun':6, 
-			u'пн':0, u'вт':1, u'ср':2, u'чт':3, u'пт':4, u'сб':5, u'вс':6,}
 
+			
 @bot.message_handler(func = lambda x: True, commands=['today', 'tomorrow', 'day'])
 def day_schedule_react(msg):
 	print("Day schedule request")
@@ -290,6 +300,7 @@ def day_schedule_react(msg):
 		gt_id = preflist[0].gt_id
 		#print (bmt_type, gt_id)
 		week_type = get_current_week_type()
+		week_type_auto_calc = True
 		
 		today_day_num = date.today().weekday()
 		if msg.text.startswith(u'/today') or msg.text.startswith(u'/day') and len(args) == 0:
@@ -305,9 +316,18 @@ def day_schedule_react(msg):
 			days_after = wanted_day - today_day_num
 			if days_after < 0:
 				days_after += 7
+				
+			if len(args) > 1:
+				week_key = args[1]
+				if not typeweek_names.has_key(week_key):
+					bot.send_message(msg.chat.id, u'Неправильный формат типа недели')
+					return
+				week_type = typeweek_names[week_key]
+				week_type_auto_calc = False
 			
 		day_num = (today_day_num + days_after) % 7
-		week_type = int(bool(week_type) !=  bool(((today_day_num + days_after)//7)%2))
+		if week_type_auto_calc:
+			week_type = int(bool(week_type) !=  bool(((today_day_num + days_after)//7)%2))
 		
 		#print day_num
-		bot.send_message(msg.chat.id, get_day_schedule(bmt_type, gt_id, day_num, week_type), parse_mode='HTML')
+		bot.send_message(msg.chat.id, get_day_schedule(bmt_type, gt_id, day_num, week_type, make_title=True), parse_mode='HTML')
